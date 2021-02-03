@@ -1,0 +1,3 @@
+[submodule "tutorial-atomic-reference"]
+	path = tutorial-atomic-reference
+	url = git@github.com:SuperB-Complex/tutorial-atomic-reference.git
