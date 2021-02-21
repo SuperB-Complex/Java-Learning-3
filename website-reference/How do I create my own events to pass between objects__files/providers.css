@@ -1,0 +1,435 @@
+#loudvoice .providers {
+	float: left;
+	position: relative;
+}
+
+#loudvoice .providers .providers_group {
+	float: left;
+	width: 100%;
+}
+
+#loudvoice .providers .providers_group.hidden {
+	display: none;
+}
+
+#loudvoice .providers .providers_group .providers_block {
+	overflow: hidden;
+	clear: both;
+}
+
+#loudvoice .providers.providers_paginated .providers_group .providers_block {
+	padding: 0 20px;
+}
+
+#loudvoice .providers .providers_group .providers_block .providers_row {
+	clear: both;
+}
+
+#loudvoice .providers .providers_group .scroll {
+	height: 100%;
+	min-height: 100%;
+	cursor: pointer;
+	position: absolute;
+	width: 20px;
+	bottom: 0;
+	top: 0;
+}
+
+#loudvoice .providers .providers_group .scroll.scroll_left {
+	left: 0;
+}
+
+#loudvoice .providers .providers_group .scroll.scroll_right {
+	right: 0;
+}
+
+#loudvoice .providers .providers_group .scroll div {
+	position: relative;
+	background: url("/img/api/themes/assets/arrows_lr.png") no-repeat scroll 0 50% transparent;
+	height: 100%;
+	margin: 0 auto !important;
+}
+
+.plugin #ie #providers .providers_group .scroll div {
+	margin-top: 0 !important;
+}
+
+#loudvoice .providers .providers_group .scroll.scroll_right div {
+	background-position: -50px 50%;
+}
+
+#loudvoice .providers .providers_group .scroll.scroll_right:hover div {
+	background-position: -10px 50%;
+}
+
+#loudvoice .providers .providers_group .scroll.scroll_left div {
+	background-position: -130px 50%;
+}
+
+#loudvoice .providers .providers_group .scroll.scroll_left:hover div {
+	background-position: -90px 50%;
+}
+
+#loudvoice .providers .provider {
+	float: left;
+	width: 32px;
+	height: 32px;
+	margin: 3px;
+	opacity: 0.9;
+}
+
+#loudvoice .providers .provider .button {
+	cursor: pointer;
+	display: block;
+	outline: 0 none;
+	background-image: url("/img/api/themes/iconsets/flat_w32_h32_w_b_v2.png");
+	background-repeat: no-repeat;
+	height: inherit;
+	border-radius: 4px;
+	background-position: -500px -500px;	
+}
+
+@media only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2/1),
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-pixel-ratio: 2) {
+    #loudvoice .providers .provider .button {
+        background-image: url("/img/api/themes/iconsets/flat_w64_h64_w_b_v1.png");
+        background-size: 32px;
+    }
+}
+
+#loudvoice .providers .provider .button .tick {
+	display: inline-block;
+	position: absolute;
+	height: 16px;
+	width: 16px;
+	z-index: 9999;
+}
+
+#loudvoice .providers .provider .name {
+	color: #555;
+	text-align: center;
+	font-size: 11px;
+	line-height: 14px;
+	margin: 1px 0 2px;
+}
+
+#loudvoice .providers .provider_linked .button .tick {
+	background: url("/img/api/themes/assets/tick.png") no-repeat 0 0 transparent;
+}
+
+#loudvoice .providers .provider_linked .name {
+	font-weight: bold;
+}
+
+#loudvoice .providers .provider .name {
+	display: none;
+	visibility: hidden;
+}
+
+#loudvoice .providers .provider:hover {
+	opacity: 1;
+}
+
+#loudvoice .providers .providers_group .scroll div {
+	margin: 0 auto !important;
+}
+
+#loudvoice .providers .provider .name {
+	border-left: 1px solid rgba(255, 255, 255, 0.22);
+	color: #fff;
+	cursor: pointer;
+	font-size: 12px;
+	line-height: 29px;
+	margin: -31px 0 0 35px;
+	padding-left: 10px;
+	position: absolute;
+	z-index: 9999;
+	display: block !important;
+}
+
+#loudvoice .providers .provider .button .tick {
+	right: -4px;
+}
+
+/* Buttons */
+#loudvoice .providers .provider #button_amazon {
+	background-position: 50% -39px;
+	background-color: #FF9900;
+}
+
+#loudvoice .providers .provider #button_aol {
+	background-position: 50% -141px;
+	background-color: #000000;
+}
+
+#loudvoice .providers .provider #button_blogger {
+	background-position: 50% -197px;
+	background-color: #F57D00;
+}
+
+#loudvoice .providers .provider #button_deviantart {
+	background-position: 50% -329px;
+	background-color: #4B5;
+}
+
+#loudvoice .providers .provider #button_digg {
+	background-position: 50% -356px;
+	background-color: #14589E;
+}
+
+#loudvoice .providers .provider #button_disqus {
+	background-position: 50% -435px;
+	background-color: #36D794;
+}
+
+#loudvoice .providers .provider #button_draugiem {
+	background-position: 50% -513px;
+	background-color: #FF6600;
+}
+
+#loudvoice .providers .provider #button_dribbble {
+	background-position: 50% -593px;
+	background-color: #EA4C89;
+}
+
+#loudvoice .providers .provider #button_facebook {
+	background-position: 50% -988px;
+	background-color: #3B5998;
+}
+
+#loudvoice .providers .provider #button_flickr {
+	background-position: 50% -1066px;
+	background-color: #0063DB;
+}
+
+#loudvoice .providers .provider #button_foursquare {
+	background-position: 50% -1145px;
+	background-color: #2398C9;
+}
+
+#loudvoice .providers .provider #button_github {
+	background-position: 50% -1225px;
+	background-color: #4183C4;
+}
+
+#loudvoice .providers .provider #button_google {
+	background-position: 50% -5609px;
+    background-color: #e6e6e6;
+}
+
+#loudvoice .providers .provider #button_googleplus {
+	background-position: 50% -1382px;
+	background-color: #D14836;
+}
+
+#loudvoice .providers .provider #button_instagram {
+	background-position: 50% -1462px;
+	background-color: #3F729B;
+}
+
+#loudvoice .providers .provider #button_linkedin {
+	background-position: 50% -1541px;
+	background-color: #007FB1;
+}
+
+#loudvoice .providers .provider #button_livejournal {
+	background-position: 50% -1619px;
+	background-color: #195397;
+}
+
+#loudvoice .providers .provider #button_mailru {
+	background-position: 50% -1699px;
+	background-color: #134785;
+}
+
+#loudvoice .providers .provider #button_myspace {
+	background-position: 50% -1936px;
+	background-color: #008DDE;
+}
+
+#loudvoice .providers .provider #button_netlog {
+	background-position: 50% -1833px;
+	background-color: #000000;
+}
+
+#loudvoice .providers .provider #button_odnoklassniki {
+	background-position: 50% -2014px;
+	background-color: #E77924;
+}
+
+#loudvoice .providers .provider #button_openid {
+	background-position: 50% -2094px;
+	background-color: #F7931E;
+}
+
+#loudvoice .providers .provider #button_paypal {
+	background-position: 50% -2172px;
+	background-color: #1F356F;
+}
+
+#loudvoice .providers .provider #button_pinterest {
+	background-position: 50% -2251px;
+	background-color: #CB2027;
+}
+
+#loudvoice .providers .provider #button_reddit {
+	background-position: 50% -2331px;
+	background-color: #FF4500;
+}
+
+#loudvoice .providers .provider #button_skyrock {
+	background-position: 50% -2410px;
+	background-color: #009AFF;
+}
+
+#loudvoice .providers .provider #button_spotify {
+	background-position: 50% -2489px;
+	background-color: #80B719;
+}
+
+#loudvoice .providers .provider #button_stackexchange {
+	background-position: 50% -2567px;
+	background-color: #1F5196;
+}
+
+#loudvoice .providers .provider #button_steam {
+	background-position: 50% -2646px;
+	background-color: #000000;
+}
+
+#loudvoice .providers .provider #button_tencentqq {
+	background-position: 50% -2726px;
+	background-color: #000;
+}
+
+#loudvoice .providers .provider #button_tumblr {
+	background-position: 50% -2805px;
+	background-color: #2C4762;
+}
+
+#loudvoice .providers .provider #button_twitch {
+	background-position: 50% -2884px;
+	background-color: #6441A5;
+}
+
+#loudvoice .providers .provider #button_twitter {
+	background-position: 50% -2963px;
+	background-color: #00ACED;
+}
+
+#loudvoice .providers .provider #button_typepad {
+	background-position: 50% -3042px;
+	background-color: #000;
+}
+
+#loudvoice .providers .provider #button_verisign {
+	background-position: 50% -3121px;
+	background-color: #FFC10C;
+}
+
+#loudvoice .providers .provider #button_viadeo {
+	background-position: 50% -3277px;
+	background-color: #F4982B;
+}
+
+#loudvoice .providers .provider #button_vimeo {
+	background-position: 50% -3278px;
+	background-color: #44BBFF;
+}
+
+#loudvoice .providers .provider #button_vine {
+	background-position: 50% -3495px;
+	background-color: #00A47A;
+}
+
+#loudvoice .providers .provider #button_vk {
+	background-position: 50% -3574px;
+	background-color: #45668E;
+}
+
+#loudvoice .providers .provider #button_vkontakte {
+	background-position: 50% -3516px;
+	background-color: #45668E;
+}
+
+#loudvoice .providers .provider #button_windowslive {
+	background-position: 50% -1777px;
+	background-color: #2f2f2f;
+}
+
+#loudvoice .providers .provider #button_wordpress {
+	background-position: 50% -3674px;
+	background-color: #21759B
+}
+
+#loudvoice .providers .provider #button_yahoo {
+	background-position: 50% -3832px;
+	background-color: #731A8B;
+}
+
+#loudvoice .providers .provider #button_youtube {
+	background-position: 50% -3911px;
+	background-color: #CD332D;
+}
+
+#loudvoice .providers .provider #button_battlenet {
+	background-position: 50% -3990px;
+	background-color: #000000;
+}
+
+#loudvoice .providers .provider #button_pixelpin {
+	background-position: 50% -5649px;
+	background-color: #000000;
+}
+
+#loudvoice .providers .provider #button_storage {
+	background-position: 50% -4149px;
+	background-color: #717171;
+}
+
+#loudvoice .providers .provider #button_meetup {
+	background-position: 50% -5018px;
+	background-color: #ED1C40;
+}
+
+#loudvoice .providers .provider #button_xing {
+    background-position: 50% -3752px;
+    background-color: #007575;
+}
+
+#loudvoice .providers .provider #button_line {
+	background-position: 50% -5096px;
+	background-color: #5cbb2b;
+}
+
+#loudvoice .providers .provider #button_mixer {
+    background-position: 0 -5491px;
+    background-color: #05193d;
+}
+
+#loudvoice .providers .provider #button_soundcloud {
+	background-position: 50% -5175px;
+	background-color: #FF7200;
+}
+
+#loudvoice .providers .provider #button_patreon {
+	background-position: 0 -5412px;
+	background-color: #F45647;
+}
+
+#loudvoice .providers .provider #button_discord {
+	background-position: 50% -5254px;
+	background-color: #7289DA;
+}
+
+#loudvoice .providers .provider #button_weibo {
+	background-position: 50% -4703px;
+	background-color: #CB2123;
+}
+
+#loudvoice .providers .provider #button_apple {
+	background-position: 50% -5728px;
+	background-color: #000;
+}
