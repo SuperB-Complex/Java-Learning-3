@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://www.cnblogs.com/doit8791/p/9098116.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta name="description" content="AtomicReferenceFieldUpdater是基于反射的工具类，用来将指定类型的指定的volatile引用字段进行原子更新，对应的原子引用字段不能是private的。通常一个类volatil">
+    <meta property="og:description" content="AtomicReferenceFieldUpdater是基于反射的工具类，用来将指定类型的指定的volatile引用字段进行原子更新，对应的原子引用字段不能是private的。通常一个类volatil">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="https://common.cnblogs.com/favicon.svg" type="image/svg+xml">
+    
+    <link rel="stylesheet" href="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/blog-common.min.css">
+    <link id="MainCss" rel="stylesheet" href="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/bundle-anothereon001.min.css">
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/bundle-anothereon001-mobile.min.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/doit8791/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/doit8791/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/doit8791/wlwmanifest.xml">
+    <script src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/osd.js"></script><script async="" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/encoder.js"></script><script>
+        var currentBlogId = 110759;
+        var currentBlogApp = 'doit8791';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'AnotherEon001';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2018-05-28 09:02';
+        </script>
+    <script src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/jquery-2.2.0.min.js"></script>
+    <script src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/blog-common.min.js"></script>
+    
+    
+    
+<meta http-equiv="origin-trial" content="A9ZgbRtm4pU3oZiuNzOsKcC8ppFSZdcjP2qYcdQrFKVzkmiWH1kdYY1Mi9x7G8+PS8HV9Ha9Cz0gaMdKsiVZIgMAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A3HucHUo1oW9s+9kIKz8mLkbcmdaj5lxt3eiIMp1Nh49dkkBlg1Fhg4Fd/r0vL69mRRA36YutI9P/lJUfL8csQoAAACFeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjI2MjIwNzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><script src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/pubads_impl_2021021701.js" async=""></script><link rel="preload" href="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/f.txt" as="script"><script type="text/javascript" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/f.txt"></script><link rel="prefetch" href="https://e7024e778078abba04df8cfa9f21ebb4.safeframe.googlesyndication.com/safeframe/1-0-37/html/container.html"><link rel="prefetch" href="https://tpc.googlesyndication.com/safeframe/1-0-37/html/container.html"></head>
+<body class="has-navbar" data-new-gr-c-s-check-loaded="14.996.0" data-gr-ext-installed="">
+    <a name="top"></a>
+        <div id="bannerbar" class="bannerbar-mobile formobile">
+            <a href="https://developer.aliyun.com/learning/trainingcamp/vision/3?utm_content=g_1000241565" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;aliyun-blog-mobile-banner&#39;)">
+                <img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/1-20210221123548373-1171207978.jpg" alt="">
+            </a>
+        </div>
+    <div id="top_nav" class="navbar forpc">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding"><a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/logo.svg" alt="博客园Logo"></a></li>
+                <li><a href="https://www.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-sitehome&#39;)">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-news&#39;)">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-q&#39;)">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-brands&#39;)">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-ing&#39;)">闪存</a></li>
+                <li><a href="https://edu.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-edu&#39;)">班级</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3">
+                        <button type="submit" id="zzk_search_button">
+                            <img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/search.svg" alt="搜索">
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客" style="display: none;">
+                        <img id="myblog_icon" class="navbar-icon" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/myblog.svg" alt="我的博客">
+                    </a>
+                    <a class="navbar-user-info navbar-blog" href="https://i.cnblogs.com/EditPosts.aspx?opt=1" alt="写随笔" title="写随笔" style="display: none;">
+                        <img id="new_post_icon" class="navbar-icon" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/newpost.svg" alt="写随笔">
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息" style="display: none;">
+                        <img id="msg_icon" class="navbar-icon" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/message.svg" alt="短消息">
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown" style="display: none;">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/avatar-default.svg" alt="用户头像">
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/" style="display: inline;">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="login()" style="display: inline;">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    <div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/doit8791/">时间的朋友</a>
+</h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div class="BlogStats">随笔 - 2874, 文章 - 3, 评论 - 194, 阅读 - 
+<span title="总阅读数: 3090033">
+309万</span></div>
+
+</div>
+
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	<div id="post_detail">
+    <div class="post">
+        <h2>
+            
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/doit8791/p/9098116.html">
+    <span>Java原子属性更新器AtomicReferenceFieldUpdater的使用</span>
+    
+
+
+</a>
+
+        </h2>
+        <div class="postbody">
+            
+<div id="cnblogs_post_body" class="blogpost-body">
+    <p>AtomicReferenceFieldUpdater是基于反射的工具类，用来将指定类型的指定的volatile引用字段进行原子更新，对应的原子引用字段不能是private的。通常一个类volatile成员属性获取值、设定为某个值两个操作时非原子的，若想将其变为原子的，则可通过AtomicReferenceFieldUpdater来实现。如下面例子：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">class</span><span style="color: rgba(0, 0, 0, 1)"> AtomicReferTest {
+    </span><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">void</span> main(String[] args) <span style="color: rgba(0, 0, 255, 1)">throws</span><span style="color: rgba(0, 0, 0, 1)"> Exception  
+    {  
+        AtomicReferenceFieldUpdater updater</span>=AtomicReferenceFieldUpdater.newUpdater(Dog.<span style="color: rgba(0, 0, 255, 1)">class</span>,String.<span style="color: rgba(0, 0, 255, 1)">class</span>,"name"<span style="color: rgba(0, 0, 0, 1)">);  
+        Dog dog1</span>=<span style="color: rgba(0, 0, 255, 1)">new</span><span style="color: rgba(0, 0, 0, 1)"> Dog();  
+        System.out.println(updater.compareAndSet(dog1,</span>"dog1","compareAndSet"<span style="color: rgba(0, 0, 0, 1)">));        
+        System.out.println(dog1.name);  
+        System.out.println(updater.getAndSet(dog1, </span>"getAndSet"<span style="color: rgba(0, 0, 0, 1)">));
+        System.out.println(dog1.name);
+    }  
+}
+</span><span style="color: rgba(0, 0, 255, 1)">class</span><span style="color: rgba(0, 0, 0, 1)"> Dog  
+{  
+     </span><span style="color: rgba(0, 0, 255, 1)">volatile</span>  String name="dog1"<span style="color: rgba(0, 0, 0, 1)">;  
+  
+}  </span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>输出结果：</p>
+<blockquote>
+<p>true<br>compareAndSet<br>compareAndSet<br>getAndSet</p>
+
+
+
+</blockquote>
+<p>通过调用AtomicReferenceFieldUpdater.newUpdater(Dog.class,String.class,"name")静态方法生成Dog类的String类型的name字段的原子修改器updater，然后调用它的compareAndSet方法判断dog1对象的name值是否为dog1，若是则返回true并修改其值。也可调用getAndSet方法直接修改dog1属性的name字段值，并返回该字段原来的值。</p>
+<p>Java类库中BufferedInputStream就调用了这个类:</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: rgba(0, 0, 255, 1)">public</span>
+<span style="color: rgba(0, 0, 255, 1)">class</span> BufferedInputStream <span style="color: rgba(0, 0, 255, 1)">extends</span><span style="color: rgba(0, 0, 0, 1)"> FilterInputStream {
+
+    </span><span style="color: rgba(0, 0, 255, 1)">protected</span> <span style="color: rgba(0, 0, 255, 1)">volatile</span> <span style="color: rgba(0, 0, 255, 1)">byte</span><span style="color: rgba(0, 0, 0, 1)"> buf[];
+
+    </span><span style="color: rgba(0, 128, 0, 1)">/*</span><span style="color: rgba(0, 128, 0, 1)">
+    *  原子的更新内部数组，比如扩容、关闭时，
+    </span><span style="color: rgba(0, 128, 0, 1)">*/</span>
+    <span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">final</span><span style="color: rgba(0, 0, 0, 1)">
+        AtomicReferenceFieldUpdater</span>&lt;BufferedInputStream, <span style="color: rgba(0, 0, 255, 1)">byte</span>[]&gt; bufUpdater =<span style="color: rgba(0, 0, 0, 1)">
+        AtomicReferenceFieldUpdater.newUpdater
+        (BufferedInputStream.</span><span style="color: rgba(0, 0, 255, 1)">class</span>,  <span style="color: rgba(0, 0, 255, 1)">byte</span>[].<span style="color: rgba(0, 0, 255, 1)">class</span>, "buf"<span style="color: rgba(0, 0, 0, 1)">);
+
+
+    </span><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">void</span> close() <span style="color: rgba(0, 0, 255, 1)">throws</span><span style="color: rgba(0, 0, 0, 1)"> IOException {
+        </span><span style="color: rgba(0, 0, 255, 1)">byte</span><span style="color: rgba(0, 0, 0, 1)">[] buffer;
+        </span><span style="color: rgba(0, 0, 255, 1)">while</span> ( (buffer = buf) != <span style="color: rgba(0, 0, 255, 1)">null</span><span style="color: rgba(0, 0, 0, 1)">) {
+            </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)">放在一个循环中，如果CAS更新失败，那么就读取最新的buf引用，继续CAS更新</span>
+            <span style="color: rgba(0, 0, 255, 1)">if</span> (bufUpdater.compareAndSet(<span style="color: rgba(0, 0, 255, 1)">this</span>, buffer, <span style="color: rgba(0, 0, 255, 1)">null</span><span style="color: rgba(0, 0, 0, 1)">)) {
+                InputStream input </span>=<span style="color: rgba(0, 0, 0, 1)"> in;
+                in </span>= <span style="color: rgba(0, 0, 255, 1)">null</span><span style="color: rgba(0, 0, 0, 1)">;
+                </span><span style="color: rgba(0, 0, 255, 1)">if</span> (input != <span style="color: rgba(0, 0, 255, 1)">null</span><span style="color: rgba(0, 0, 0, 1)">)
+                    input.close();
+                </span><span style="color: rgba(0, 0, 255, 1)">return</span><span style="color: rgba(0, 0, 0, 1)">;
+            }
+        }
+    }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>AtomicReferenceFieldUpdater是Doug Lea在Java 5中写的atomic classes 中Filed Updater的一部分，本质上是volatile字段的包装器。相似的还有AtomicIntegerFieldUpdater，具体使用方法可参考：<a href="https://github.com/aCoder2013/blog/issues/10" target="_blank">https://github.com/aCoder2013/blog/issues/10</a></p>
+<p>注意原子更新器的使用存在比较苛刻的条件如下</p>
+<ul>
+<li>
+<p>操作的字段不能是static类型。</p>
+</li>
+<li>
+<p>操作的字段不能是final类型的，因为final根本没法修改。</p>
+</li>
+<li>
+<p>字段必须是volatile修饰的，也就是数据本身是读一致的。</p>
+</li>
+<li>
+<p>属性必须对当前的Updater所在的区域是可见的，如果不是当前类内部进行原子更新器操作不能使用private，protected子类操作父类时修饰符必须是protect权限及以上，如果在同一个package下则必须是default权限及以上，也就是说无论何时都应该保证操作类与被操作类间的可见性。</p>
+</li>
+</ul>
+<p><a href="http://blog.csdn.net/javazejian/article/details/72772470" target="_blank">Java并发编程-无锁CAS与Unsafe类及其并发包Atomic</a></p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(9098116,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;5632c5fe-c59d-df11-ba8f-001cf0cd104b&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/doit8791/" target="_blank"><img src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/doit8791/">时间朋友</a><br>
+            <a href="https://home.cnblogs.com/u/doit8791/followees/">关注 - 45</a><br>
+            <a href="https://home.cnblogs.com/u/doit8791/followers/">粉丝 - 316</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;5632c5fe-c59d-df11-ba8f-001cf0cd104b&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(9098116,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(9098116,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/doit8791/p/9095518.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/doit8791/p/9095518.html" title="发布于 2018-05-27 11:36">2018第21周回顾</a>
+    <br>
+    <a href="https://www.cnblogs.com/doit8791/p/9098188.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/doit8791/p/9098188.html" title="发布于 2018-05-29 08:55">自旋锁、排队自旋锁、MCS锁、CLH锁</a>
+
+</div>
+</div>
+        </div>
+        <p class="postfoot">
+            posted on 
+<span id="post-date">2018-05-28 09:02</span>&nbsp;
+<a href="https://www.cnblogs.com/doit8791/">时间朋友</a>&nbsp;
+阅读(<span id="post_view_count">534</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=9098116" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(9098116);return false;">收藏</a>
+        </p>
+    </div>
+</div>
+
+<script src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 110759, cb_blogApp = 'doit8791', cb_blogUserGuid = '5632c5fe-c59d-df11-ba8f-001cf0cd104b';
+    var cb_entryId = 9098116, cb_entryCreatedDate = '2018-05-28 09:02', cb_postType = 1;
+    updatePostStats(
+        [cb_entryId],
+        function(id, count) { $("#post_view_count").text(count) },
+        function(id, count) { $("#post_comment_count").text(count) })
+</script>
+<a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/doit8791/p/9098116.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/doit8791/p/9098116.html#top">返回顶部</a></div>
+    <div id="comment_form_container" style="visibility: visible;"><div class="login_tips">
+    登录后才能发表评论，立即 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，
+    <a href="https://www.cnblogs.com/">访问</a> 网站首页
+</div>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="https://developer.aliyun.com/learning/trainingcamp/vision/3?utm_content=g_1000241565" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-AI&#39;)">【推荐】阿里巴巴达摩院特别版—趣味视觉AI训练营开营，快速入门视觉AI</a><br><a href="https://developer.aliyun.com/learning/topic/covid-19/2021?utm_content=g_1000240877" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-充电&#39;)">【推荐】三月招聘季，充电拿Offer！阿里云携官方学习资料来给你开小灶啦</a><br><a href="https://www.cnblogs.com/cmt/p/14408628.html" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-AWS&#39;)">【求助】注册 Amazon Web Services(AWS) 账户，助园子一臂之力</a><br><a href="http://www.softbam.com/index.htm" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-ucancode&#39;)">【推荐】大型组态、工控、仿真、CADGIS 50万行VC++源码免费下载</a><br><a href="https://brands.cnblogs.com/huawei/topic/harmonyos-development-tutorial" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-华为专区&#39;)">【推荐】万物互联的时代，由你的代码定义，创建HarmonyOS应用</a><br><a href="https://brands.cnblogs.com/agora/p/2035" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-声网专区&#39;)">【推荐】Agora 精选 | 是什么让视频通讯在Covid-19中脱颖而出？</a><br></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="under-post-card">
+        <div id="div-gpt-ad-1592365906576-0" style="width: 300px; height: 250px;" data-google-query-id="CPDyq5SV_u4CFZGApgQdFsUP6A"><div id="google_ads_iframe_/1090369/C1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C1_0" title="3rd party ad content" name="google_ads_iframe_/1090369/C1_0" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" data-google-container-id="1" style="border: 0px; vertical-align: bottom;" data-load-complete="true" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/saved_resource(1).html"></iframe></div></div>
+    </div>
+    <div id="under_post_card1"><div class="under-post-card"><b>AWS免费产品</b>：<br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/webapps/?trk=ba_a134p000006vc6OAAQ&amp;trkCampaign=webapps&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">如何在AWS上免费构建网站</a><br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/storage/?trk=ba_a134p000006vc7JAAQ&amp;trkCampaign=storage&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">AWS免费云存储解决方案</a><br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/database/?trk=ba_a134p000006vc7YAAQ&amp;trkCampaign=database&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">在AWS上免费构建数据库</a><br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/machine-learning/?trk=ba_a134p000006vc7nAAA&amp;trkCampaign=ML&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">AWS上的免费机器学习</a></div></div>
+    <div id="cnblogs_c2" class="under-post-card">
+        <div id="div-gpt-ad-1592366332455-0" style="width: 468px; height: 60px;" data-google-query-id="CNbLrZSV_u4CFZGApgQdFsUP6A"><div id="google_ads_iframe_/1090369/C2_0__container__" style="border: 0pt none; display: inline-block; width: 468px; height: 60px;"><iframe frameborder="0" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/container.html" id="google_ads_iframe_/1090369/C2_0" title="3rd party ad content" name="" scrolling="no" marginwidth="0" marginheight="0" width="468" height="60" data-is-safeframe="true" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" data-google-container-id="2" style="border: 0px; vertical-align: bottom;" data-load-complete="true"></iframe></div></div>
+    </div>
+    <div id="under_post_card2"><div class="itnews under-post-card">
+    <b>最新新闻</b>：
+    <br>
+ ·          <a href="https://news.cnblogs.com/n/688739/" target="_blank">留给一加手机的时间不多了</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/688737/" target="_blank">茄子快传发现多个安全漏洞</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/688736/" target="_blank">17999 元起，华为 Mate X2 折叠屏手机来了！鸿蒙 2.0 马上就到</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/688735/" target="_blank">云知声终止IPO，曾遭科大讯飞打假，三年半亏损7.9亿</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/688734/" target="_blank">青云科技设计智慧数据中心解决方案 铺筑实现“碳中和”道路</a>
+        <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="under-post-card">
+<b>历史上的今天：</b>
+<br>
+
+2017-05-28    <a href="https://www.cnblogs.com/doit8791/p/6915191.html">《取悦症》听书笔记</a>
+    <br>
+2016-05-28    <a href="https://www.cnblogs.com/doit8791/p/5538546.html">2016第22周六</a>
+    <br>
+2015-05-28    <a href="https://www.cnblogs.com/doit8791/p/4537307.html">2015第22周四</a>
+    <br>
+2014-05-28    <a href="https://www.cnblogs.com/doit8791/p/3757613.html">第22周三</a>
+    <br>
+2013-05-28    <a href="https://www.cnblogs.com/doit8791/archive/2013/05/28/3104325.html">2013年5月28日20:16:21</a>
+    <br>
+2012-05-28    <a href="https://www.cnblogs.com/doit8791/archive/2012/05/28/2522556.html">MySql中的varchar类型</a>
+    <br>
+</div>
+    <script type="text/javascript">
+       var commentManager = new blogCommentManager();
+       commentManager.renderComments(0);
+       fixPostBody();
+       deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);       deliverT2();
+       deliverC1C2();
+       loadNewsAndKb();
+       loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);       LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+       GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+       loadOptUnderPost();
+       GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+    <li>
+        
+
+    </li>
+    <li>
+        
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/doit8791/">
+首页</a>
+
+    </li>
+    <li>
+        
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+
+    </li>
+    <li>
+        
+
+    </li>
+    <li>
+        
+
+        
+
+    </li>
+    <li>
+        
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+
+    </li>
+</ul>
+
+
+<div id="blog-calendar" style="">
+
+<table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0">
+    <tbody>
+        <tr>
+            <td colspan="7">
+                <table class="CalTitle" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2021/01/23&#39;); return false;">&lt;</a>
+                            </td>
+                            <td align="center">2021年2月</td>
+                            <td align="right" class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2021/03/23&#39;); return false;">&gt;</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    <tr>
+        <th class="CalDayHeader" align="center" abbr="日" scope="col">日</th>
+        <th class="CalDayHeader" align="center" abbr="一" scope="col">一</th>
+        <th class="CalDayHeader" align="center" abbr="二" scope="col">二</th>
+        <th class="CalDayHeader" align="center" abbr="三" scope="col">三</th>
+        <th class="CalDayHeader" align="center" abbr="四" scope="col">四</th>
+        <th class="CalDayHeader" align="center" abbr="五" scope="col">五</th>
+        <th class="CalDayHeader" align="center" abbr="六" scope="col">六</th>
+    </tr>
+            <tr>
+                            <td class="CalOtherMonthDay" align="center">31</td>
+                        <td class="" align="center">
+                            1
+                        </td>
+                        <td class="" align="center">
+                            2
+                        </td>
+                        <td class="" align="center">
+                            3
+                        </td>
+                        <td class="" align="center">
+                            4
+                        </td>
+                        <td class="" align="center">
+                            5
+                        </td>
+                    <td class="CalWeekendDay" align="center">
+                        6
+                    </td>
+            </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            <a href="https://www.cnblogs.com/doit8791/archive/2021/02/07.html"><u>7</u></a>
+                        </td>
+                            <td class="" align="center">
+                                8
+                            </td>
+                            <td class="" align="center">
+                                9
+                            </td>
+                            <td class="" align="center">
+                                10
+                            </td>
+                            <td class="" align="center">
+                                <a href="https://www.cnblogs.com/doit8791/archive/2021/02/11.html"><u>11</u></a>
+                            </td>
+                            <td class="" align="center">
+                                12
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            13
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            14
+                        </td>
+                            <td class="" align="center">
+                                15
+                            </td>
+                            <td class="" align="center">
+                                16
+                            </td>
+                            <td class="" align="center">
+                                17
+                            </td>
+                            <td class="" align="center">
+                                18
+                            </td>
+                            <td class="" align="center">
+                                <a href="https://www.cnblogs.com/doit8791/archive/2021/02/19.html"><u>19</u></a>
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            20
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            21
+                        </td>
+                            <td class="" align="center">
+                                22
+                            </td>
+                            <td class="CalTodayDay" align="center">
+                                23
+                            </td>
+                            <td class="" align="center">
+                                24
+                            </td>
+                            <td class="" align="center">
+                                25
+                            </td>
+                            <td class="" align="center">
+                                26
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            27
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            28
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                1
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                2
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                3
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                4
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                5
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            6
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalOtherMonthDay" align="center">
+                            7
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                8
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                9
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                10
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                11
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                12
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            13
+                        </td>
+                </tr>
+    </tbody>
+</table></div><script>loadBlogDefaultCalendar();</script>
+
+<div id="sidebar_c3"></div>
+<div id="blog-sidecolumn"><!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+
+
+<!-- 最新随笔 -->
+
+
+<!-- 我的标签 -->
+
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap" class="RecentComment">
+    <h3 class="catListTitle">最新评论</h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14353991.html">1. Re:2021.4 基本功里学好语文是最重要的</a></li>
+                    <li class="recent_comment_body"><p>改文章引用 钟院士的采访视频标题是什么？我想看看原视频，体验下</p>
+</li>
+                    <li class="recent_comment_author">--恶霸超人强</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14397744.html">2. Re:2021.6 过年</a></li>
+                    <li class="recent_comment_body"><p>读书是为了从中学到东西，而不是更加自我感觉良好</p>
+</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14383652.html">3. Re:2021.5 保险</a></li>
+                    <li class="recent_comment_body"><p>人生很长，未来的发展和机会一直在变化，千万不要觉得现在在某些城市，现在从事某个行业，而不愿意根据时代的变化去适应和改变。</p>
+</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14353991.html">4. Re:2021.4 基本功里学好语文是最重要的</a></li>
+                    <li class="recent_comment_body"><p>身为一位技术人,技术水平决定下限,沟通水平决定上限.</p>
+</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14320877.html">5. Re:2021.3 微信十周年张小龙演讲</a></li>
+                    <li class="recent_comment_body"><p>结尾的总结很不错</p>
+</li>
+                    <li class="recent_comment_author">--朝无咫云</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14320877.html">6. Re:2020.3 微信十周年张小龙演讲</a></li>
+                    <li class="recent_comment_body">"互联网产品是关于创造力的，而不是拼人数。如果一个一百人的团队做不出来一个产品，给一千人也照样做不出来，甚至做的更差，因为一千人的内耗太大了。" 非常有道理,我现在的体会是,几十人的团队,沟通协调,任...</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14287939.html">7. Re:2021.2 卡脖子技术清单</a></li>
+                    <li class="recent_comment_body"><p>哈哈哈哈哈 跟着国家走 感觉可以买这些相关的股票了</p>
+</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14218923.html">8. Re:2020第53周总结</a></li>
+                    <li class="recent_comment_body">多和领导沟通汇报工作，一方面能通过他更高的视角、更多的信息来完善自己，另一方面也能争取到更多的资源支持，让自己的工作更有成效，更能得到领导的重视及肯定，自然也更容易升职加薪。这就是职场上重要的向上管理...</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/11846583.html">9. Re:Spring 中的异常处理</a></li>
+                    <li class="recent_comment_body"><p>感谢博主，这篇文章学到许多</p>
+</li>
+                    <li class="recent_comment_author">--卢本伟</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/doit8791/p/14163655.html">10. Re:2020第51周先思考Why</a></li>
+                    <li class="recent_comment_body"><p>他曾说：「我们的目标不是销售比特斯拉好的汽车，而是试图提供更好的乘坐体验，这才是我们想要的成功。」</p>
+</li>
+                    <li class="recent_comment_author">--ws66ds</li>
+        </ul>
+    </div>
+</div></div>
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+<div id="topview_posts_wrap">
+    <h3 class="catListTitle">阅读排行榜</h3>
+    <div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/5730595.html">
+                            1. 网络抓包wireshark(119214)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/4093808.html">
+                            2. Spring单例与线程安全小结(101518)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/archive/2012/05/28/2522556.html">
+                            3. MySql中的varchar类型(98945)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/5214251.html">
+                            4. postgreSQL数据类型转换字符串和数值(88719)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/5820037.html">
+                            5. Java类加载器ClassLoader总结(73940)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/archive/2012/05/25/2517448.html">
+                            6. Java基本数据类型总结(67514)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/7461479.html">
+                            7. 高性能IO之Reactor模式(65431)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/archive/2012/05/21/2511080.html">
+                            8. 常用批处理命令总结3之Find和FindStr(59757)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/9343826.html">
+                            9. 五种常见软件架构(51448)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/archive/2012/10/22/2734730.html">
+                            10. findBugs学习小结(49717)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+    <h3 class="catListTitle">评论排行榜</h3>
+    <div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/4093808.html">
+                            1. Spring单例与线程安全小结(16)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/5820037.html">
+                            2. Java类加载器ClassLoader总结(12)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/7461479.html">
+                            3. 高性能IO之Reactor模式(10)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/7659243.html">
+                            4. Spring MVC之@RequestParam @RequestBody @RequestHeader 等详解(6)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/archive/2012/05/25/2517448.html">
+                            5. Java基本数据类型总结(6)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/8831442.html">
+                            6. Tomcat的最大并发数(5)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/8191065.html">
+                            7. VsCode中运行nodeJs代码的简单方法(4)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/5757798.html">
+                            8. Spring配置文件头及xsd文件版本(4)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/4209442.html">
+                            9. servlet/filter/listener/interceptor区别与联系(4)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/doit8791/p/3546595.html">
+                            10. 2014第7周三初识CouchBase(4)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/doit8791/p/5730595.html">
+                                1. 网络抓包wireshark(28)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/doit8791/p/4093808.html">
+                                2. Spring单例与线程安全小结(28)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/doit8791/archive/2012/05/25/2517448.html">
+                                3. Java基本数据类型总结(19)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/doit8791/p/4209442.html">
+                                4. servlet/filter/listener/interceptor区别与联系(15)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/doit8791/p/7461479.html">
+                                5. 高性能IO之Reactor模式(12)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div></div></div>
+                    <script>loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a href="https://www.cnblogs.com/" id="footer_site_link">博客园</a>
+	<br>
+	Copyright © 2021 时间朋友
+<br><span id="poweredby">Powered by .NET 5.0 on Kubernetes</span>
+
+</p>
+
+
+</div>
+</div>
+
+
+    
+
+
+<iframe id="google_osd_static_frame_3243492182893" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./Java原子属性更新器AtomicReferenceFieldUpdater的使用 - 时间朋友 - 博客园_files/saved_resource(2).html"></iframe></body></html>
