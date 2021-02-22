@@ -21,6 +21,47 @@ public class MethodReturnTypePractice {
 
 					System.out.println("Return Type Details: " + returnParam.getName()); 
 			} 
+			// outputs all methods including inheriting methods
+			/*
+			Method Name : getValue
+			Return Type Details: java.lang.String
+
+			Method Name : setValue
+			Return Type Details: int
+
+			Method Name : setManyValues
+			Return Type Details: void
+
+			Method Name : setParamter
+			Return Type Details: demoForReturnParam
+
+			Method Name : wait
+			Return Type Details: void
+
+			Method Name : wait
+			Return Type Details: void
+
+			Method Name : wait
+			Return Type Details: void
+
+			Method Name : equals
+			Return Type Details: boolean
+
+			Method Name : toString
+			Return Type Details: java.lang.String
+
+			Method Name : hashCode
+			Return Type Details: int
+
+			Method Name : getClass
+			Return Type Details: java.lang.Class
+
+			Method Name : notify
+			Return Type Details: void
+
+			Method Name : notifyAll
+			Return Type Details: void
+			*/
 		} 
 		catch (Exception e) { 
 			e.printStackTrace(); 
