@@ -7,7 +7,7 @@ public class MethodReturnTypePractice {
 	{ 
 		try { 
 			// Create class object 
-			Class classobj = demoForReturnParam.class; 
+			Class classobj = DemoForReturnParam.class; 
 
 			// Get Method Object 
 			Method[] methods = classobj.getMethods(); 
