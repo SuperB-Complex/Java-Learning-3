@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<!-- saved from url=(0080)https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script src="./ThreadLocal with examples in Java_files/osd.js"></script><script src="./ThreadLocal with examples in Java_files/f(2).txt"></script><script src="./ThreadLocal with examples in Java_files/f(3).txt" id="google_shimpl"></script><script type="text/javascript" async="" src="./ThreadLocal with examples in Java_files/analytics.js"></script><script async="" src="./ThreadLocal with examples in Java_files/js"></script>
+      <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'UA-138181587-2');
+      </script>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ThreadLocal provides a mechanism of maintaining thread confinement for a given object. which allows you to associate a per-thread value with a value-holding object.">
+      <meta name="keywords" content="threadlocal, java, interview question, multi-threading">
+  <meta name="author" content="Carvia Tech">
+<meta name="_csrf_parameter" content="_csrf"><meta name="_csrf_header" content="X-CSRF-TOKEN"><meta name="_csrf" content="5d480171-5136-413d-b463-4eebed8a15d9">  <link rel="shortcut icon" href="https://www.javacodemonk.com/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="https://www.javacodemonk.com/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e">
+
+  <title>ThreadLocal with examples in Java </title>
+
+  <link rel="stylesheet" href="./ThreadLocal with examples in Java_files/css2">
+  <!-- Bootstrap Core CSS -->
+  <link href="./ThreadLocal with examples in Java_files/bootstrap.min-9789b96f44004a593f70a170ff563e16.css" rel="stylesheet">
+  <link href="./ThreadLocal with examples in Java_files/jumbotron-0ef7edc6babea5a47645bda0c45368aa.css" rel="stylesheet">
+  <link href="./ThreadLocal with examples in Java_files/blog-home-ade407501ff5c1ab784618eb657e923e.css" rel="stylesheet">
+  <link href="./ThreadLocal with examples in Java_files/asciidoctor-custom-785158165a1d808c644a0202b4e99988.css" rel="stylesheet">
+<link href="./ThreadLocal with examples in Java_files/cookiealert-9e8dfac3a92b0d50dcd725aa5687a19d.css" rel="stylesheet">
+<link href="./ThreadLocal with examples in Java_files/font-awesome.min-269550530cc127b6aa5a35925a7de6ce.css" rel="stylesheet">
+
+  <link href="./ThreadLocal with examples in Java_files/font-awesome.min-269550530cc127b6aa5a35925a7de6ce.css" rel="stylesheet">
+
+  <meta property="og:url" content="https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ThreadLocal with examples in Java ">
+  <meta property="og:description" content="ThreadLocal provides a mechanism of maintaining thread confinement for a given object. which allows you to associate a per-thread value with a value-holding object.">
+      <meta property="og:image" content="https://s3.shunyafoundation.com/s3/aa800796e9fab25a512b2bbef9798efecff12964/threadlocal_java-2x.png">
+
+  <script src="./ThreadLocal with examples in Java_files/jquery.min.js"></script>
+  <link href="./ThreadLocal with examples in Java_files/googlecode-a6c3e3d282eff14600ac0e1b8e495419.css" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+      "@context": "http://schema.org",
+      "@type": "BlogPosting",
+      "headline": "ThreadLocal with examples in Java ",
+      "image": "https://s3.shunyafoundation.com/s3/aa800796e9fab25a512b2bbef9798efecff12964/threadlocal_java-2x.png",
+      "keywords": "threadlocal, java, interview question, multi-threading",
+      "description": "ThreadLocal provides a mechanism of maintaining thread confinement for a given object. which allows you to associate a per-thread value with a value-holding object.",
+      "publisher": {
+            "@type": "Organization",
+            "name": "Carvia Tech"
+      },
+      "url": "https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e",
+      "datePublished": "2019-04-25",
+      "dateModified": "2020-08-11",
+      "author": {
+          "@type": "Person",
+          "name": "Carvia Tech"
+      }
+  }
+  </script>
+
+  <script type="text/javascript">
+      $(function () {
+          var token = $("meta[name='_csrf']").attr("content");
+          var header = $("meta[name='_csrf_header']").attr("content");
+          $(document).ajaxSend(function (e, xhr, options) {
+              xhr.setRequestHeader(header, token);
+          });
+      });
+
+      var scrollToElement = function (el, ms) {
+          var speed = (ms) ? ms : 1500;
+          $('html,body').animate({
+              scrollTop: $(el).offset().top
+          }, speed);
+      };
+
+      var useAjaxBusyWait = function () {
+          $(document).ready(function () {
+              $('body').append('<div id="ajaxBusy"><p id="ajaxBusyMsg">Please wait...</p></div>');
+              // AJAX activity indicator bound to ajax start/stop document events
+              $(document).ajaxStart(function () {
+                  $('#ajaxBusy').show();
+              }).ajaxStop(function () {
+                  $('#ajaxBusy').hide();
+              });
+          });
+      };
+  </script>
+
+
+
+  <style>
+    h1, .h1 {
+      font-size: 2.0rem;
+    }
+
+    .sticky-top {
+        top: 5.5em;
+        z-index: 1;
+    }
+
+    .btn-circle {
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
+        text-align: center;
+        padding: 0;
+        border-radius: 50%;
+    }
+
+    .btn-circle i {
+        position: relative;
+        top: -1px;
+    }
+
+    .btn-circle-sm {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 0.9rem;
+    }
+
+    .btn-circle-lg {
+        width: 55px;
+        height: 55px;
+        line-height: 55px;
+        font-size: 1.1rem;
+    }
+
+    .btn-circle-xl {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        font-size: 1.3rem;
+    }
+
+  </style>
+<meta http-equiv="origin-trial" content="A+pvvGjoiNPDAn2JQFsT0CQbtlBZ8PLmAA4ReIHeP5mnOrPRuXf1nuQa1Dlu/MdwAmPuAC7cVDJLU1oBuOqMkQkAAAB5eyJvcmlnaW4iOiJodHRwczovL2dvb2dsZWFwaS5jb206NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjI2MjIwNzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A9ZgbRtm4pU3oZiuNzOsKcC8ppFSZdcjP2qYcdQrFKVzkmiWH1kdYY1Mi9x7G8+PS8HV9Ha9Cz0gaMdKsiVZIgMAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AxL6oBxcpn5rQDPKSAs+d0oxNyJYq2/4esBUh3Yx5z8QfcLu+AU8iFCXYRcr/CEEfDnkxxLTsvXPJFQBxHfvkgMAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A9KPtG5kl3oLTk21xqynDPGQ5t18bSOpwt0w6kGa6dEWbuwjpffmdUpR3W+faZDubGT+KIk2do0BX2ca16x8qAcAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A3HucHUo1oW9s+9kIKz8mLkbcmdaj5lxt3eiIMp1Nh49dkkBlg1Fhg4Fd/r0vL69mRRA36YutI9P/lJUfL8csQoAAACFeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjI2MjIwNzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><link rel="preload" href="./ThreadLocal with examples in Java_files/f(4).txt" as="script"><script type="text/javascript" src="./ThreadLocal with examples in Java_files/f(4).txt"></script></head>
+
+<body data-new-gr-c-s-check-loaded="14.996.0" data-gr-ext-installed="">
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <div class="container">
+    <a class="navbar-brand" href="https://www.javacodemonk.com/"><i class="fa fa-home" aria-hidden="true"></i> CodeMonk</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li id="ml_menu_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/category/machine-learning">ML</a>
+            </li>
+            <li id="sdet_menu_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/category/sdet-interviews">SDET</a>
+            </li>
+            <li id="java_menu_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/category/java-interviews">Java</a>
+            </li>
+            <li id="microservices_menu_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/category/microservices">Microservices</a>
+            </li>
+            <li id="spring_menu_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/category/spring-framework">Spring</a>
+            </li>
+            <li id="explore_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/explore"><i class="fa fa-list" aria-hidden="true"></i> More</a>
+            </li>
+            <li id="bookshelf_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/book-shelf"><i class="fa fa-book" aria-hidden="true"></i> Books</a>
+            </li>
+            <li id="feeds_id" class="nav-item">
+                <a class="nav-link" href="https://www.javacodemonk.com/feeds"><i class="fa fa-book" aria-hidden="true"></i> Feeds</a>
+            </li>
+
+
+
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0" action="https://www.javacodemonk.com/search" method="get">
+            <input class="form-control mr-sm-1" type="text" value="" name="q" placeholder="Search for ..." required="">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </form>
+
+    </div>
+    </div>
+</nav>
+
+<script>
+    $('#home_id').addClass('active');
+</script>
+
+<main role="main" style="height: auto !important;">
+    <!-- Page Content -->
+    <div class="container mt-3" style="height: auto !important;">
+
+        <div class="row" style="height: auto !important;">
+            <!-- Post Content Column -->
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <nav aria-label="breadcrumb" role="navigation">
+                    <ol class="breadcrumb small">
+                        <li class="breadcrumb-item"><a href="https://www.javacodemonk.com/explore">Home</a></li>
+                            <li class="breadcrumb-item"><a href="https://www.javacodemonk.com/category/core-java">Core Java</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">ThreadLocal with examples in Java </li>
+                    </ol>
+                </nav>
+
+                <!-- Title -->
+                <h1 class="mt-3">ThreadLocal with examples in Java </h1>
+
+                <p class="lead small">
+                    <span class="mr-2"><i class="fa fa-address-card-o" aria-hidden="true"></i> Carvia Tech</span> |
+                    <span class="text-muted1 ml-2 mr-2"><i class="fa fa-calendar" aria-hidden="true"></i> August 11, 2020</span> |
+                    <span class="text-muted1 ml-2 mr-2"><i class="fa fa-clock-o" aria-hidden="true"></i> 4 min read</span> |
+                    <span class="text-muted1 ml-2 mr-2"><i class="fa fa-eye" aria-hidden="true"></i> 534 views</span>
+                    | <span class="ml-2 mr-2">
+                        <i class="fa fa-tags" aria-hidden="true"></i>
+                        <a href="https://www.javacodemonk.com/tag/multithreading-concurrency"><span class="badge badge-primary"> Multithreading and Concurrency </span></a>
+                    </span>
+                </p>
+
+                <hr>
+
+
+                <!-- Post Content -->
+                <div class="customCss">
+                    <div class="quoteblock abstract">
+<blockquote>
+ThreadLocal provides a mechanism of maintaining thread confinement for a given object. which allows you to associate a per-thread value with a value-holding object.
+</blockquote>
+</div>
+<div class="exampleblock">
+<div class="title">ThreadLocal Java Docs</div>
+<div class="content">
+<div class="paragraph">
+<p>ThreadLocal class provides thread-local variables. These variables differ from their normal counterparts in that each thread that accesses one (via its get or set method) has its own, independently initialized copy of the variable.<br></p>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html#withInitial-java.util.function.Supplier" class="bare">https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html#withInitial-java.util.function.Supplier</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pattern_to_use_threadlocal">Pattern to use ThreadLocal</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).</p>
+</div>
+<div class="paragraph">
+<p>For example, the class below generates counters local to each thread. A new copy ThreadLocalCounter is assigned the first time it invokes ThreadLocalCounter.get() and remains unchanged on subsequent calls.</p>
+</div>
+<div class="listingblock">
+<div class="title">ThreadLocalCounter class</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadLocalCounter</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> count;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ThreadLocalCounter</span><span class="hljs-params">(<span class="hljs-keyword">int</span> count)</span> </span>{
+        <span class="hljs-keyword">this</span>.count = count;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">increment</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> ++count;
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;ThreadLocalCounter&gt; threadLocal = ThreadLocal.withInitial(() -&gt; <span class="hljs-keyword">new</span> ThreadLocalCounter(<span class="hljs-number">0</span>));
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ThreadLocalCounter <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> threadLocal.get();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This ThreadLocalCounter can be used by multiple threads to keep their own counter copy which is not visible to other threads.</p>
+</div>
+<div class="listingblock">
+<div class="title">ThreadLocalCounter</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Thread thread = <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+        ThreadLocalCounter threadLocalCounter = ThreadLocalCounter.get();
+        <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>) {
+            <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> counter = threadLocalCounter.increment();
+            doSomeWork(counter);
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doSomeWork</span><span class="hljs-params">(<span class="hljs-keyword">int</span> counter)</span> </span>{
+        <span class="hljs-comment">//Dummy Work</span>
+    }
+});
+thread.start();</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Garbage Collection Behaviour</div>
+<div class="content">
+<div class="paragraph">
+<p>Each thread holds an implicit reference to its copy of a thread-local variable as long as the thread is alive and the ThreadLocal instance is accessible; after a thread goes away, all of its copies of thread-local instances are subject to garbage collection (unless other references to these copies exist).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_benefits_of_using_threadlocal">Benefits of using ThreadLocal</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>It makes multi-threading easy by not sharing the state of an object across threads. Since state is not shared so you don’t need to <code>synchronize</code> it with other requests. Please be noted that ThreadLocal is not a substitute of synchronization, instead it isolates an object from being exposed to multiple threads. Something like this:</p>
+<div class="listingblock">
+<div class="title">Servlet filter with ThreadLocal</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs"> doGet(HttpServletRequest req, HttpServletResponse resp) {
+   User user = getLoggedInUser(req);
+   StaticClass.getThreadLocal().set(user)
+   <span class="hljs-keyword">try</span> {
+     doSomething()
+     doSomethingElse()
+     renderResponse(resp)
+   }
+   <span class="hljs-keyword">finally</span> {
+     StaticClass.getThreadLocal().remove()
+   }
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now any code that requires access to current user object, can obtain the reference using below code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">User user = StaticClass.getThreadLocal().get()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">where Static class is defined as:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaticClass</span> </span>{
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">private</span> ThreadLocal threadLocal = <span class="hljs-keyword">new</span> ThreadLocal&lt;User&gt;();
+
+  <span class="hljs-function"><span class="hljs-keyword">static</span> ThreadLocal&lt;User&gt; <span class="hljs-title">getThreadLocal</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> threadLocal;
+  }
+}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usecase">Usecase</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ThreadLocal is ideal for storing objects that are not thread-safe and object sharing across threads is not required. A good example is Hibernate Session which is not threadsafe and must not be shared across threads, so we can put Session into ThreadLocal and execute the transaction. In a servlet environment, this can happen in a filter which creates a new session for each request and commit the session after request is complete. Similar approach can be taken for JDBC connection.</p>
+</li>
+<li>
+<p><code>SimpleDataFormat</code> is not a thread-safe class, so you can use ThreadLocal to keep a copy of it per thread, thus avoiding the need for synchronization. The other option could be to create a new object on each invocation which requires more resources compared to ThreadLocal approach.</p>
+<div class="listingblock">
+<div class="title">ThreadSafeDateFormat</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs"><span class="hljs-keyword">import</span> java.text.SimpleDateFormat;
+<span class="hljs-keyword">import</span> java.util.Date;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadSafeDateFormat</span> </span>{
+    <span class="hljs-comment">//SimpleDateFormat is not thread-safe, so give one instance to each thread</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;SimpleDateFormat&gt; formatter = ThreadLocal.withInitial(() -&gt; <span class="hljs-keyword">new</span> SimpleDateFormat(<span class="hljs-string">"yyyy.MM.dd HHmm a"</span>));
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title">formatIt</span><span class="hljs-params">(Date date)</span> </span>{
+        <span class="hljs-keyword">return</span> formatter.get().format(date);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>{
+        <span class="hljs-keyword">final</span> String formatIt = ThreadSafeDateFormat.formatIt(<span class="hljs-keyword">new</span> Date());
+        System.out.println(<span class="hljs-string">"formatIt = "</span> + formatIt);
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>ThreadLocal is very useful in web applications, a typical pattern is to store the state of web request in ThreadLocal (usually in a servlet filter or spring interceptor) at the very start of the processing and then access this state from any component involved in request processing. Normally all the processing of a web request happens in a single thread. In-fact ThreadLocal is widely used in implementing application frameworks. For example, J2EE containers associate a transaction context with an executing thread for the duration of an EJB call. This is implemented using a static Thread-Local holding the transaction context.</p>
+</li>
+<li>
+<p>In creating a application that requires thread level stats collections for e.g. stress testing apps, performance monitoring app.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_issues_with_threadlocal">Issues with ThreadLocal</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>ThreadLocal introduces hidden coupling among classes, which makes them hard to test and debug. So it should be used with care.</p>
+</li>
+<li>
+<p>It is easy to abuse ThreadLocal by treating its thread confinement property as a license to use global variables or as a means of creating “hidden” method arguments.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Java Concurrency in Practice: Where author (Joshua Bloch) explains how Thread confinement is one of the simplest ways to achieve thread safety and ThreadLocal is more formal means of maintaining thread confinement.</p>
+</li>
+<li>
+<p>Discussion on SO - <a href="https://stackoverflow.com/questions/817856/when-and-how-should-i-use-a-threadlocal-variable" class="bare">https://stackoverflow.com/questions/817856/when-and-how-should-i-use-a-threadlocal-variable</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+                </div>
+
+    <ins class="adsbygoogle" style="display: block; text-align: center; height: 183px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-8459438937301460" data-ad-slot="7685550227" data-adsbygoogle-status="done"><ins id="aswift_0_expand" style="display:inline-table;border:none;height:183px;margin:0;padding:0;position:relative;visibility:visible;width:730px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_0_anchor" style="display:block;border:none;height:183px;margin:0;padding:0;position:relative;visibility:visible;width:730px;background-color:transparent;"><iframe id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;border:0;width:730px;height:183px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="730" height="183" frameborder="0" src="./ThreadLocal with examples in Java_files/ads.html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!1" data-google-query-id="CNmE9qOh_u4CFduBZAodOOsBtQ" data-load-complete="true"></iframe></ins></ins></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+
+                    <hr class="hr-line-dashed">
+
+                    <h5 class="text-muted">Top articles in this category:</h5>
+                    <ol>
+                            <li><a href="https://www.javacodemonk.com/blocking-queue-implementation-in-java-044ee033">Blocking Queue implementation in Java</a></li>
+                            <li><a href="https://www.javacodemonk.com/troubleshooting-deadlock-in-java-2526a14f">Troubleshooting Deadlock in Java</a></li>
+                            <li><a href="https://www.javacodemonk.com/implement-custom-thread-pool-in-java-without-executor-framework-ca10e61d">Custom Thread pool implementation in Java</a></li>
+                            <li><a href="https://www.javacodemonk.com/how-will-you-implement-your-custom-threadsafe-semaphore-in-java-047e4890">How will you implement your custom threadsafe Semaphore in Java</a></li>
+                            <li><a href="https://www.javacodemonk.com/difference-between-implementing-runnable-and-extending-thread-89c61aa0">Difference between Implementing Runnable and Extending Thread</a></li>
+                            <li><a href="https://www.javacodemonk.com/producer-consumer-problem-using-blocking-queue-in-java-e0e583dd">Producer Consumer Problem using Blocking Queue in Java</a></li>
+                            <li><a href="https://www.javacodemonk.com/set-precision-and-scale-for-a-double-value-in-java-9c8d56f4">Precision and scale for a Double in java</a></li>
+                    </ol>
+
+                <hr class="hr-line-dashed">
+
+
+                <h5 class="text-muted">Find more on this topic:</h5>
+
+                <div class="row">
+                    <div class="col-6">
+                        <a href="https://www.javacodemonk.com/category/core-java" class="card-link">
+                            <div class="card mb-3 shadow-sm h-md-250">
+                                <div class="row no-gutters">
+                                    <div class="col-md-12">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Core Java</h5>
+                                            <p class="card-text">Core Java - OOP Concepts, Garbage Collection, Multi-threading, Collections Framework, Java 8 Features, Lambda Functions, Streams.</p>
+                                            <p class="card-text"><small class="text-muted">Last updated 1 week ago</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+   <div class="card bg-white mb-3 w-100">
+       <div class="card-body">
+           <h5 class="card-title">Subscribe to Interview Questions</h5>
+           <form action="https://www.javacodemonk.com/subscribe/apply" method="post">
+               <div class="form-group">
+                   <input type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="Email Address" required="">
+               </div>
+               <div class="form-group">
+                   <button type="submit" class="form-control btn btn-primary btn-block">Subscribe to Interview Questions</button>
+               </div>
+<input type="hidden" name="_csrf" value="5d480171-5136-413d-b463-4eebed8a15d9">           </form>
+       </div>
+   </div>
+                    </div>
+                </div>
+
+                <hr class="hr-line-dashed">
+
+                    <h6 class="text-muted">Recommended books for interview preparation:</h6>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card bg-light mb-3">
+                <div class="card-header">
+                    Book you may be interested in..
+                </div>
+                <div class="card-body">
+                    <div class="media">
+                        <a href="https://books.shunyafoundation.com/to/VWVTPZ3A?affid=javablog" target="_blank">
+                            <img class="mr-3 img-responsive" style="max-height: 170px;" src="https://books.shunyafoundation.com/attachment/1a7mak63mrkv60c6/spring-microservices-interviews-small.jpg" alt="Generic placeholder image">
+                        </a>
+                        <div class="media-body">
+                            <h5 class="card-title mt-0"><a href="https://books.shunyafoundation.com/to/VWVTPZ3A?affid=javablog" target="_blank">ebook PDF - Cracking Spring Microservices Interviews for Java Developers</a></h5>
+                            <nav>
+                                <a href="https://books.shunyafoundation.com/to/VWVTPZ3A?affid=javablog" target="_blank" class="btn btn-info">Buy for Rs. 199</a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-light mb-3">
+                <div class="card-header">
+                    Book you may be interested in..
+                </div>
+                <div class="card-body">
+                    <div class="media">
+                        <a href="https://books.shunyafoundation.com/to/sku2?affid=javablog" target="_blank">
+                            <img class="mr-3 img-responsive" style="max-height: 170px;" src="https://s3.shunyafoundation.com/s3/5d72600aedda418ad475743183fb3b8e08dc6c79/ccji-front-cover.png" alt="Generic placeholder image">
+                        </a>
+                        <div class="media-body">
+                            <h5 class="card-title mt-0"><a href="https://books.shunyafoundation.com/to/sku2?affid=javablog" target="_blank">ebook PDF - Cracking Java Interviews v3.5 by Munish Chandel</a></h5>
+                            <nav>
+                                <a href="https://books.shunyafoundation.com/to/sku2?affid=javablog" target="_blank" class="btn btn-info">Buy for Rs. 250</a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+                <!-- Comments Form -->
+
+                <!-- Single Comment -->
+
+                <!-- Comment with nested comments -->
+
+            </div>
+
+            <!-- Sidebar Widgets Column -->
+            <div class="col-md-4" style="height: auto !important;">
+
+    <div class="card bg-white mb-3 w-100 mt-2">
+        <a href="https://www.javacodemonk.com/contact-us" target="_blank">
+            <img class="card-img-top" src="https://s3.shunyafoundation.com/s3/3abf0b21022b47a65e6f0ea344dd048099020413/consultation-ad.png" alt="Book free consultation">
+        </a>
+    </div>
+
+
+                <div class="card my-4" style="height: auto !important;">
+    <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-8459438937301460" data-ad-slot="2119917255" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done"><ins id="aswift_1_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:348px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_1_anchor" style="display: block; border: none; height: 280px; margin: 0px; padding: 0px; position: relative; visibility: visible; width: 348px; background-color: transparent; overflow: visible;"><iframe id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;border:0;width:348px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="348" height="280" frameborder="0" src="./ThreadLocal with examples in Java_files/ads(1).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!2" data-google-query-id="CIyZ1eWg_u4CFUdklgod7YMIHg" data-load-complete="true"></iframe></ins></ins></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+                </div>
+                <!-- Categories Widget -->
+
+                <!-- Categories Widget -->
+
+                <!-- Side Widget -->
+                    <div class="card my-4">
+                        <h5 class="card-header">Similar Posts</h5>
+    <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/code-review-checklist-for-java-developers-5a3d8348">
+                        <span class="small">Code review checklist for Java developers</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/count-word-frequency-in-java-e6c2918a">
+                        <span class="small">Count word frequency in Java</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/secure-otp-generation-in-java-3d1b11d0">
+                        <span class="small">Secure OTP generation in Java</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/create-hmacsha256-signature-in-java-3421c36d">
+                        <span class="small">HmacSHA256 Signature in Java</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/submit-form-with-java-11-httpclient-kotlin-40180c7d">
+                        <span class="small">Submit Form with Java 11 HttpClient - Kotlin</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/java-exception-class-hierarchy-92e8224e">
+                        <span class="small">Java Exception Class Hierarchy</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/http-download-using-java-nio-filechannel-f6196fc4">
+                        <span class="small">Http download using Java NIO FileChannel</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/crc32-checksum-calculation-java-nio-c26893db">
+                        <span class="small">CRC32 checksum calculation Java NIO</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/set-precision-and-scale-for-a-double-value-in-java-9c8d56f4">
+                        <span class="small">Precision and scale for a Double in java</span>
+                    </a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="https://www.javacodemonk.com/difference-between-hashmap-linkedhashmap-and-treemap-d33da4e2">
+                        <span class="small">Difference between HashMap, LinkedHashMap and TreeMap</span>
+                    </a>
+                </li>
+    </ul>
+                    </div>
+
+                <div class="sticky-top" style="height: auto !important;">
+                    <div class="card my-4" style="height: auto !important;">
+    <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-8459438937301460" data-ad-slot="5649839744" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done"><ins id="aswift_2_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:348px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_2_anchor" style="display: block; border: none; height: 280px; margin: 0px; padding: 0px; position: relative; visibility: visible; width: 348px; background-color: transparent; overflow: visible;"><iframe id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;border:0;width:348px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="348" height="280" frameborder="0" src="./ThreadLocal with examples in Java_files/ads(2).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!3" data-google-query-id="CI2v5Z6h_u4CFUyF7AodzDEHsA" data-load-complete="true"></iframe></ins></ins></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+                    </div>
+                    <div class="card my-4" style="height: auto !important;">
+    <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-8459438937301460" data-ad-slot="5018545355" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done"><ins id="aswift_3_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:348px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_3_anchor" style="display: block; border: none; height: 280px; margin: 0px; padding: 0px; position: relative; visibility: visible; width: 348px; background-color: transparent; overflow: visible;"><iframe id="aswift_3" name="aswift_3" style="left:0;position:absolute;top:0;border:0;width:348px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="348" height="280" frameborder="0" src="./ThreadLocal with examples in Java_files/ads(3).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!4" data-google-query-id="COCm5Z6h_u4CFfER-QAd3h0FjA" data-load-complete="true"></iframe></ins></ins></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+                    </div>
+                    <div class="card my-4" style="height: auto !important;">
+    <ins class="adsbygoogle" style="display: block; height: 280px;" data-ad-client="ca-pub-8459438937301460" data-ad-slot="2119917255" data-ad-format="auto" data-full-width-responsive="true" data-adsbygoogle-status="done"><ins id="aswift_4_expand" style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:348px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_4_anchor" style="display: block; border: none; height: 280px; margin: 0px; padding: 0px; position: relative; visibility: visible; width: 348px; background-color: transparent; overflow: visible;"><iframe id="aswift_4" name="aswift_4" style="left:0;position:absolute;top:0;border:0;width:348px;height:280px;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" width="348" height="280" frameborder="0" src="./ThreadLocal with examples in Java_files/ads(4).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!5" data-google-query-id="COaK5p6h_u4CFcIA-QAdubwCDg" data-load-complete="true"></iframe></ins></ins></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <hr>
+<!-- Cookies -->
+<div class="alert alert-dismissible text-center cookiealert show" role="alert">
+    <div class="cookiealert-container">
+        <b>Do you like cookies?</b> 🍪 We use cookies to ensure you get the best experience on our website. <a href="https://www.javacodemonk.com/privacy-policy" target="_blank">Learn more</a>
+
+        <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
+            I agree
+        </button>
+    </div>
+</div>
+<!-- End Cookies -->
+
+<!-- Footer -->
+<footer class="py-3 bg-primary1 footer">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4 offset-md-1 col-sm-12">
+                <ul class="text-left mb-0">
+                    <li><a href="https://www.javacodemonk.com/admin">Sign in</a></li>
+                    <li><a href="https://www.javacodemonk.com/privacy-policy">Privacy Policy</a></li>
+                    <li><a href="https://www.javacodemonk.com/contact-us">Free Consultation</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 offset-md-3 col-sm-12">
+                <p class="text-center">Find us on social media.</p>
+                <ul class="list-inline text-center list-social-icons mb-0">
+                    <li class="list-inline-item">
+                        <a href="https://www.facebook.com/crackingjavainterviews/" target="_blank" rel="nofollow">
+                            <span class="fa-stack fa-lg">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e#">
+                            <span class="fa-stack fa-lg">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e#">
+                            <span class="fa-stack fa-lg">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="https://www.javacodemonk.com/threadlocal-with-examples-usecases-in-java-3912002e#">
+                            <span class="fa-stack fa-lg">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <p class="copyright text-center">Copyright © www.javacodemonk.com 2020-21</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<script src="./ThreadLocal with examples in Java_files/jquery.min.js"></script>
+<script src="./ThreadLocal with examples in Java_files/js.cookie.js"></script>
+<script>
+    $(document).ready(function() {
+        if (localStorage.getItem('popState') != 'shown') {
+            $('#cookies').addClass("cookies-show");
+            $('.cookies-close').addClass("show-close-cookies");
+        }
+
+        $('#cookies-close').click(function (e) {
+            localStorage.setItem('popState','shown');
+            // var number = Math.random();
+            // var id = number.toString(36).substr(2, 9); // 'xtis06h6'
+            // Cookies.set('ShunyaPlatform', id);
+            $('#cookies').removeClass("cookies-show").addClass("cookies-hide");
+            $('.cookies-close').removeClass("show-close-cookies").addClass("hide-close-cookies");
+        });
+    });
+</script>
+
+    </div>
+    <!-- /.container -->
+
+</main>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="./ThreadLocal with examples in Java_files/popper.min.js"></script>
+<script src="./ThreadLocal with examples in Java_files/bootstrap.min.js"></script>
+<script src="./ThreadLocal with examples in Java_files/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script type="text/javascript">
+  $(".js-social-share").click(function(e) {
+      e.preventDefault();
+
+      windowPopup($(this).attr("href")+window.location.href, 500, 300);
+  });
+
+  function windowPopup(url, width, height) {
+      // Calculate the position of the popup so
+      // it’s centered on the screen.
+      var left = (screen.width / 2) - (width / 2),
+              top = (screen.height / 2) - (height / 2);
+
+      window.open(
+              url,
+              "",
+              "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left
+      );
+  }
+</script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script defer="" src="./ThreadLocal with examples in Java_files/firebase-app.js"></script>
+<script defer="" src="./ThreadLocal with examples in Java_files/firebase-messaging.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script defer="" src="./ThreadLocal with examples in Java_files/init-firebase.js"></script>
+<script defer="" src="./ThreadLocal with examples in Java_files/configure-firebase.js"></script>
+
+<script async="" src="./ThreadLocal with examples in Java_files/f(5).txt"></script>
+<script src="./ThreadLocal with examples in Java_files/cookiealert.js"></script>
+
+
+<ins class="adsbygoogle adsbygoogle-noablate" data-adsbygoogle-status="done" style="display: none !important;"><ins id="aswift_5_expand" style="display:inline-table;border:none;height:0px;margin:0;padding:0;position:relative;visibility:visible;width:0px;background-color:transparent;" tabindex="0" title="Advertisement" aria-label="Advertisement"><ins id="aswift_5_anchor" style="display:block;border:none;height:0px;margin:0;padding:0;position:relative;visibility:visible;width:0px;background-color:transparent;"><iframe id="aswift_5" name="aswift_5" style="left:0;position:absolute;top:0;border:0;width:undefinedpx;height:undefinedpx;" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" frameborder="0" src="./ThreadLocal with examples in Java_files/ads(5).html" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" allowfullscreen="true" data-google-container-id="a!6" data-load-complete="true"></iframe></ins></ins></ins><iframe id="google_osd_static_frame_2891509886816" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./ThreadLocal with examples in Java_files/saved_resource.html"></iframe></body><iframe id="google_esf" name="google_esf" src="./ThreadLocal with examples in Java_files/zrt_lookup.html" data-ad-client="ca-pub-8459438937301460" style="display: none;"></iframe></html>

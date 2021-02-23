@@ -1,0 +1,48 @@
+
+var ftGUID_5343539="47800195BBEFD1";
+var ftConfID_5343539="23833777";
+var ftParams_5343539="ftOBA=1&ft_domain=howtodoinjava.com&ft_ifb=1&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fhowtodoinjava.com%2F&gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&us_privacy=${US_PRIVACY}&cachebuster=405888.20456689433&ft_keyword=AW_US&ft_section=%5BPUBLISHER%20AUCTION%20MACRO%5D";
+var ftKeyword_5343539="aw_us";
+var ftCustom_5343539="";
+var ftSection_5343539="[PUBLISHER AUCTION MACRO]";
+var ftSegment_5343539="afww,w2c,aanx,afxp,aevh,afti";
+var ftSegmentList_5343539=[{s:'afww'},{s:'w2c'},{s:'aanx',t:47890000},{s:'afxp'},{s:'aevh'},{s:'afti'}];
+var ftRuleMatch_5343539="00010000";
+var ftTimestamp_5343539="1614021330";
+var ftGeoC2_5343539="us";
+var ftGeoState_5343539="il";
+var ftGeoCity_5343539="chicago";
+var ftISP_5343539="att internet services";
+var ftSpeed_5343539="xdsl";
+var ftDMA_5343539="602";
+var ftLong_5343539="-87.64";
+var ftLat_5343539="41.88";
+var ftPostal_5343539="60661";
+var ftTimeZone_5343539="-600";
+var ftMobileCarrier_5343539="";
+var ftImp5343539 = {};
+ftImp5343539.privacy = "x";
+ftImp5343539.guidAge = "21";
+ftImp5343539.impID = "8BB7BAA1-7885-0E7C-25A7-51ADC15E2A5F";
+ftImp5343539.duid = "FT:47800195BBEFD1";
+
+ftImp5343539.ft_tpplid = "";
+ftImp5343539.ft_c = {};
+ftImp5343539.gdpr = "!!GDPR!";
+ftImp5343539.gdpr_consent = "!!GDPR_CONSENT_78!";
+ftImp5343539.gdpr_pd = "";
+ftImp5343539.oob_consent = "0";
+ftImp5343539.gdprStoredConsent = "";
+ftImp5343539.us_privacy = "!!US_PRIVACY!";
+
+ftImp5343539.jsAppend = "1";
+(function(){
+    var tag = document.getElementById('ft_servedby_5343539') || (function(s){
+    	return s[s.length-1];
+    }(document.getElementsByTagName('script'))),
+           js = document.createElement('script');
+    js.src = 
+"https://cdn.flashtalking.com/xre/534/5343539/2962133/js/j-5343539-2962133.js";
+    js.id = "ftscript_m5343539";
+    tag.parentNode.insertBefore(js, tag);
+}());

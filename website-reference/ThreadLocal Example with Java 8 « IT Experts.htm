@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<!-- saved from url=(0085)https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/ -->
+<html class=" js rgba multiplebgs backgroundsize borderradius boxshadow textshadow opacity cssgradients csstransitions generatedcontent" lang="en" style=""><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" async="" src="./ThreadLocal Example with Java 8 « IT Experts_files/publishertag.prebid.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ThreadLocal Example with Java 8 « IT Experts</title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://itexpertsconsultant.wordpress.com/xmlrpc.php">
+
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://wordpress.com/">
+<link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="https://s.pubmine.com/">
+<link rel="dns-prefetch" href="https://x.bidswitch.net/">
+<link rel="dns-prefetch" href="https://static.criteo.net/">
+<link rel="dns-prefetch" href="https://ib.adnxs.com/">
+<link rel="dns-prefetch" href="https://aax.amazon-adsystem.com/">
+<link rel="dns-prefetch" href="https://bidder.criteo.com/">
+<link rel="dns-prefetch" href="https://cas.criteo.com/">
+<link rel="dns-prefetch" href="https://gum.criteo.com/">
+<link rel="dns-prefetch" href="https://ads.pubmatic.com/">
+<link rel="dns-prefetch" href="https://gads.pubmatic.com/">
+<link rel="dns-prefetch" href="https://tpc.googlesyndication.com/">
+<link rel="dns-prefetch" href="https://ad.doubleclick.net/">
+<link rel="dns-prefetch" href="https://googleads.g.doubleclick.net/">
+<link rel="dns-prefetch" href="https://www.googletagservices.com/">
+<link rel="dns-prefetch" href="https://cdn.switchadhub.com/">
+<link rel="dns-prefetch" href="https://delivery.g.switchadhub.com/">
+<link rel="dns-prefetch" href="https://delivery.swid.switchadhub.com/">
+<link rel="dns-prefetch" href="https://a.teads.tv/">
+<link rel="dns-prefetch" href="https://prebid.media.net/">
+<link rel="dns-prefetch" href="https://adserver-us.adtech.advertising.com/">
+<link rel="dns-prefetch" href="https://fastlane.rubiconproject.com/">
+<link rel="dns-prefetch" href="https://prebid-server.rubiconproject.com/">
+<link rel="dns-prefetch" href="https://hb-api.omnitagjs.com/">
+<link rel="dns-prefetch" href="https://mtrx.go.sonobi.com/">
+<link rel="dns-prefetch" href="https://apex.go.sonobi.com/">
+<link rel="dns-prefetch" href="https://u.openx.net/">
+<link rel="alternate" type="application/rss+xml" title="IT Experts » Feed" href="https://itexpertsconsultant.wordpress.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="IT Experts » Comments Feed" href="https://itexpertsconsultant.wordpress.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="IT Experts » ThreadLocal Example with Java 8 Comments Feed" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/feed/">
+	<script src="./ThreadLocal Example with Java 8 « IT Experts_files/sdk.js" async="" crossorigin="anonymous"></script><script src="./ThreadLocal Example with Java 8 « IT Experts_files/sdk(1).js"></script><script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s0.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1612197847h&ver=5.6.2"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([55357,56424,8205,55356,57212],[55357,56424,8203,55356,57212])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./ThreadLocal Example with Java 8 « IT Experts_files/wp-emoji-release.min.js" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel="stylesheet" id="all-css-0-1" href="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(1)" type="text/css" media="all">
+<style id="wp-block-library-inline-css">
+.has-text-align-justify {
+	text-align:justify;
+}
+</style>
+<link crossorigin="anonymous" rel="stylesheet" id="eventbrite-venue-cutive-css" href="./ThreadLocal Example with Java 8 « IT Experts_files/css" media="all">
+<link crossorigin="anonymous" rel="stylesheet" id="eventbrite-venue-raleway-css" href="./ThreadLocal Example with Java 8 « IT Experts_files/css(1)" media="all">
+<link rel="stylesheet" id="all-css-4-1" href="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(2)" type="text/css" media="all">
+<style id="jetpack-global-styles-frontend-style-inline-css">
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+</style>
+<link rel="stylesheet" id="all-css-6-1" href="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(3)" type="text/css" media="all">
+<script id="jetpack_related-posts-js-extra">
+var related_posts_js_options = {"post_heading":"h4"};
+</script>
+<script id="wpcom-actionbar-placeholder-js-extra">
+var actionbardata = {"siteID":"91233490","siteName":"IT Experts","siteURL":"http:\/\/itexpertsconsultant.wordpress.com","icon":"<img alt='' src='https:\/\/s0.wp.com\/i\/logo\/wpcom-gray-white.png' class='avatar avatar-50' height='50' width='50' \/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/eventbrite-venue","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/wordpress.com\/log-in?redirect_to=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F&signup_flow=account","themeURL":"","xhrURL":"https:\/\/itexpertsconsultant.wordpress.com\/wp-admin\/admin-ajax.php","nonce":"1b50b146d8","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"1b9dc62023\" \/>","referer":"https:\/\/itexpertsconsultant.wordpress.com\/2017\/05\/29\/threadlocal-example-with-java-8\/","canFollow":"1","feedID":"35479306","statusMessage":"","customizeLink":"https:\/\/itexpertsconsultant.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F","postID":"1607","shortlink":"https:\/\/wp.me\/p6aNZU-pV","canEditPost":"","editLink":"https:\/\/wordpress.com\/post\/itexpertsconsultant.wordpress.com\/1607","statsLink":"https:\/\/wordpress.com\/stats\/post\/1607\/itexpertsconsultant.wordpress.com","i18n":{"view":"View site","follow":"Follow","following":"Following","edit":"Edit","login":"Log in","signup":"Sign up","customize":"Customize","report":"Report this content","themeInfo":"Get theme: Eventbrite Multi Event","shortlink":"Copy shortlink","copied":"Copied","followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/read\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar","editSubs":"Manage subscriptions","viewReader":"View site in Reader","viewReadPost":"View post in Reader","subscribe":"Sign me up","enterEmail":"Enter your email address","followers":"Join 542 other followers","alreadyUser":"Already have a WordPress.com account? <a href=\"https:\/\/wordpress.com\/log-in?redirect_to=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F&signup_flow=account\">Log in now.<\/a>","stats":"Stats"}};
+</script>
+<script type="text/javascript" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(4)"></script>
+<link rel="stylesheet" id="all-css-0-2" href="./ThreadLocal Example with Java 8 « IT Experts_files/style(1).css" type="text/css" media="all">
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='https://s0.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563h&#038;ver=20110606' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://itexpertsconsultant.wordpress.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s0.wp.com/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/">
+<link rel="shortlink" href="https://wp.me/p6aNZU-pV">
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F&amp;for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F&amp;for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal Example with Java 8">
+<meta property="og:url" content="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/">
+<meta property="og:description" content="What is ThreadLocal in Java? ThreadLocal is a specially provisioned functionality by JVM to provide isolated storage space for threads only. like the value of instance scoped variable are bound to …">
+<meta property="article:published_time" content="2017-05-29T08:17:30+00:00">
+<meta property="article:modified_time" content="2020-01-03T06:41:32+00:00">
+<meta property="og:site_name" content="IT Experts">
+<meta property="og:image" content="https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=300">
+<meta property="og:image:width" content="121">
+<meta property="og:image:height" content="96">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:site" content="@wordpressdotcom">
+<meta name="twitter:text:title" content="ThreadLocal Example with Java 8">
+<meta name="twitter:image" content="https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=144">
+<meta name="twitter:card" content="summary">
+<meta property="fb:app_id" content="249643311490">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom">
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel="shortcut icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico" sizes="16x16 24x24 32x32 48x48">
+<link rel="apple-touch-icon" href="https://s0.wp.com/i/webclip.png">
+<link rel="openid.server" href="https://itexpertsconsultant.wordpress.com/?openidserver=1">
+<link rel="openid.delegate" href="https://itexpertsconsultant.wordpress.com/">
+<link rel="search" type="application/opensearchdescription+xml" href="https://itexpertsconsultant.wordpress.com/osd.xml" title="IT Experts">
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com">
+		<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<meta name="application-name" content="IT Experts"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="msapplication-tooltip" content="consultant"><meta name="msapplication-task" content="name=Subscribe;action-uri=https://itexpertsconsultant.wordpress.com/feed/;icon-uri=https://s0.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=https://s0.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=https://s0.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=https://s0.wp.com/i/favicon.ico"><meta name="description" content="What is ThreadLocal in Java? ThreadLocal is a specially provisioned functionality by JVM to provide isolated storage space for threads only. like the value of instance scoped variable are bound to a given instance of a class only. each object has its only values and they can not see each other value. so is the…">
+		<style type="text/css">
+					header .logo-text h1,
+			header .logo-text h5 {
+				color: #fff;
+			}
+				</style>
+				<style type="text/css" id="eventbrite-header-css">
+		header[role=banner] {
+			background: url(https://s0.wp.com/wp-content/themes/pub/eventbrite-venue/img/bg-header.jpg) top center no-repeat;
+			background-size: cover;
+		}
+		</style>
+		<style type="text/css" id="custom-background-css">
+body.custom-background { background-image: url("https://s0.wp.com/wp-content/themes/pub/eventbrite-venue/img/bg-main.png"); background-position: left top; background-size: auto; background-repeat: repeat; background-attachment: scroll; }
+</style>
+			<script type="text/javascript">
+
+			window.doNotSellCallback = function() {
+
+				var linkElements = [
+					'a[href="https://wordpress.com/?ref=footer_blog"]',
+					'a[href="https://wordpress.com/?ref=footer_website"]',
+					'a[href="https://wordpress.com/?ref=vertical_footer"]',
+					'a[href^="https://wordpress.com/?ref=footer_segment_"]',
+				].join(',');
+
+				var dnsLink = document.createElement( 'a' );
+				dnsLink.href = 'https://wordpress.com/advertising-program-optout';
+				dnsLink.classList.add( 'do-not-sell-link' );
+				dnsLink.rel = 'nofollow';
+				dnsLink.style.marginLeft = '0.5em';
+				dnsLink.textContent = 'Do Not Sell My Personal Information';
+
+				var creditLinks = document.querySelectorAll( linkElements );
+
+				if ( 0 === creditLinks.length ) {
+					return false;
+				}
+
+				Array.prototype.forEach.call( creditLinks, function( el ) {
+					el.insertAdjacentElement( 'afterend', dnsLink );
+				});
+
+				return true;
+			};
+
+		</script>
+				<script type="text/javascript">
+		function __ATA_CC() {var v = document.cookie.match('(^|;) ?personalized-ads-consent=([^;]*)(;|$)');return v ? 1 : 0;}
+		var __ATA_PP = { 'pt': 1, 'ht': 0, 'tn': 'eventbrite-venue', 'amp': false, 'consent': __ATA_CC(), 'gdpr_applies': false, 'ad': { 'label': { 'text': 'Advertisements' }, 'reportAd': { 'text': 'Report this ad' } }, 'siteid': 8982, 'blogid': 91233490 };
+		var __ATA = __ATA || {};
+		__ATA.cmd = __ATA.cmd || [];
+		__ATA.criteo = __ATA.criteo || {};
+		__ATA.criteo.cmd = __ATA.criteo.cmd || [];
+		</script>
+		<script type="text/javascript">
+		(function(){var g=Date.now||function(){return+new Date};function h(a,b){a:{for(var c=a.length,d="string"==typeof a?a.split(""):a,e=0;e<c;e++)if(e in d&&b.call(void 0,d[e],e,a)){b=e;break a}b=-1}return 0>b?null:"string"==typeof a?a.charAt(b):a[b]};function k(a,b,c){c=null!=c?"="+encodeURIComponent(String(c)):"";if(b+=c){c=a.indexOf("#");0>c&&(c=a.length);var d=a.indexOf("?");if(0>d||d>c){d=c;var e=""}else e=a.substring(d+1,c);a=[a.substr(0,d),e,a.substr(c)];c=a[1];a[1]=b?c?c+"&"+b:b:c;a=a[0]+(a[1]?"?"+a[1]:"")+a[2]}return a};var l=0;function m(a,b){var c=document.createElement("script");c.src=a;c.onload=function(){b&&b(void 0)};c.onerror=function(){b&&b("error")};a=document.getElementsByTagName("head");var d;a&&0!==a.length?d=a[0]:d=document.documentElement;d.appendChild(c)}function n(a){var b=void 0===b?document.cookie:b;return(b=h(b.split("; "),function(c){return-1!=c.indexOf(a+"=")}))?b.split("=")[1]:""}function p(a){return"string"==typeof a&&0<a.length}
+		function r(a,b,c){b=void 0===b?"":b;c=void 0===c?".":c;var d=[];Object.keys(a).forEach(function(e){var f=a[e],q=typeof f;"object"==q&&null!=f||"function"==q?d.push(r(f,b+e+c)):null!==f&&void 0!==f&&(e=encodeURIComponent(b+e),d.push(e+"="+encodeURIComponent(f)))});return d.filter(p).join("&")}function t(a,b){a||((window.__ATA||{}).config=b.c,m(b.url))}var u=Math.floor(1E13*Math.random()),v=window.__ATA||{};window.__ATA=v;window.__ATA.cmd=v.cmd||[];v.rid=u;v.createdAt=g();var w=window.__ATA||{},x="s.pubmine.com";
+		w&&w.serverDomain&&(x=w.serverDomain);var y="//"+x+"/conf",z=window.top===window,A=window.__ATA_PP&&window.__ATA_PP.gdpr_applies,B="boolean"===typeof A?Number(A):null,C=window.__ATA_PP||null,D=z?document.referrer?document.referrer:null:null,E=z?window.location.href:document.referrer?document.referrer:null,F,G=n("__ATA_tuuid");F=G?G:null;var H=window.innerWidth+"x"+window.innerHeight,I=n("usprivacy"),J=r({gdpr:B,pp:C,rid:u,src:D,ref:E,tuuid:F,vp:H,us_privacy:I?I:null},"",".");
+		(function(a){var b=void 0===b?"cb":b;l++;var c="callback__"+g().toString(36)+"_"+l.toString(36);a=k(a,b,c);window[c]=function(d){t(void 0,d)};m(a,function(d){d&&t(d)})})(y+"?"+J);}).call(this);
+		</script><script src="./ThreadLocal Example with Java 8 « IT Experts_files/conf"></script><link rel="amphtml" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/amp/"><script type="text/javascript">
+	window.google_analytics_uacct = "UA-52447-2";
+</script>
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-52447-2']);
+	_gaq.push(['_gat._anonymizeIp']);
+	_gaq.push(['_setDomainName', 'wordpress.com']);
+	_gaq.push(['_initData']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})();
+</script><script type="text/javascript" async="" src="./ThreadLocal Example with Java 8 « IT Experts_files/ga.js"></script>
+<link rel="stylesheet" type="text/css" id="gravatar-card-css" href="./ThreadLocal Example with Java 8 « IT Experts_files/hovercard.min.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="./ThreadLocal Example with Java 8 « IT Experts_files/services.min.css"><script src="./ThreadLocal Example with Java 8 « IT Experts_files/ata.js"></script><script charset="utf-8" src="./ThreadLocal Example with Java 8 « IT Experts_files/2.js"></script><link href="./ThreadLocal Example with Java 8 « IT Experts_files/actionbar.css" type="text/css" rel="stylesheet"><style type="text/css" data-fbcssmodules="css:fb.css.basecss:fb.css.dialog css:fb.css.iframewidget">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_dialog_advanced{border-radius:8px;padding:10px}.fb_dialog_content{background:#fff;color:#373737}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{left:5px;right:auto;top:5px}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{height:100%;left:0;margin:0;overflow:visible;position:absolute;top:-10000px;transform:none;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{background:none;height:auto;min-height:initial;min-width:initial;width:auto}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{clear:both;color:#fff;display:block;font-size:18px;padding-top:20px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .4);bottom:0;left:0;min-height:100%;position:absolute;right:0;top:0;width:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_mobile .fb_dialog_iframe{position:sticky;top:0}.fb_dialog_content .dialog_header{background:linear-gradient(from(#738aba), to(#2c4987));border-bottom:1px solid;border-color:#043b87;box-shadow:white 0 1px 1px -1px inset;color:#fff;font:bold 14px Helvetica, sans-serif;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:linear-gradient(from(#4267B2), to(#2a4887));background-clip:padding-box;border:1px solid #29487d;border-radius:3px;display:inline-block;line-height:18px;margin-top:3px;max-width:85px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{background:none;border:none;color:#fff;font:bold 12px Helvetica, sans-serif;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #4a4a4a;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f5f6f7;border:1px solid #4a4a4a;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-position:50% 50%;background-repeat:no-repeat;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}</style></head>
+
+<body class="post-template-default single single-post postid-1607 single-format-standard custom-background customizer-styles-applied highlander-enabled highlander-light" data-new-gr-c-s-loaded="14.996.0">
+		<header role="banner">
+		<div class="container">
+			<div class="logo-row">
+												<a href="https://itexpertsconsultant.wordpress.com/" class="logo">
+					<img src="./ThreadLocal Example with Java 8 « IT Experts_files/java-logo.png" scale="0">
+				</a>
+								<a href="https://itexpertsconsultant.wordpress.com/" class="logo-text">
+					<h1>IT Experts</h1>
+					<h5>consultant</h5>
+				</a>
+			</div>
+			<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" class="menu-toggle">-</a>
+		</div>
+	</header>
+
+	<section role="main" class="main-container">
+		<div id="site-container" class="container">
+			<nav class="menu"><ul id="menu-javaj2ee-technologies" class="menu"><li id="menu-item-12" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children menu-item-12"><a title="Java" href="https://itexpertsconsultant.wordpress.com/category/java/">Java</a>
+<ul class="sub-menu">
+	<li id="menu-item-248" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-248"><a href="https://itexpertsconsultant.wordpress.com/category/java/core-java/">Core Java</a></li>
+	<li id="menu-item-247" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-247"><a href="https://itexpertsconsultant.wordpress.com/category/java/advance-java/">Advance Java</a></li>
+	<li id="menu-item-32" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-32"><a href="https://itexpertsconsultant.wordpress.com/category/java/concurrency-package/">Concurrency</a></li>
+</ul>
+</li>
+<li id="menu-item-11" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-11"><a href="https://itexpertsconsultant.wordpress.com/category/j2ee/">J2EE</a>
+<ul class="sub-menu">
+	<li id="menu-item-33" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-33"><a href="https://itexpertsconsultant.wordpress.com/category/j2ee/jsp/">JSP</a></li>
+	<li id="menu-item-34" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-34"><a href="https://itexpertsconsultant.wordpress.com/category/j2ee/servlet/">Servlet</a></li>
+</ul>
+</li>
+<li id="menu-item-16" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-16"><a href="https://itexpertsconsultant.wordpress.com/category/spring/">Spring</a></li>
+<li id="menu-item-10" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-10"><a href="https://itexpertsconsultant.wordpress.com/category/hibernate/">Hibernate</a></li>
+<li id="menu-item-9" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-9"><a href="https://itexpertsconsultant.wordpress.com/category/angularjs/">AngularJS</a></li>
+<li id="menu-item-14" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-14"><a href="https://itexpertsconsultant.wordpress.com/category/mongodb/">MongoDB</a></li>
+<li id="menu-item-15" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-15"><a href="https://itexpertsconsultant.wordpress.com/category/restful-services/">REST Services</a></li>
+</ul></nav>		<div class="row">
+			<div class="span8">
+				<div class="left-col">
+	<div class="event-item post-1607 post type-post status-publish format-standard hentry category-advance-java category-java" id="post-1607">
+
+	<div class="event-text">
+		<h3><a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/" rel="bookmark">ThreadLocal Example with Java&nbsp;8</a></h3>		<p class="date" data-adtags-visited="true">
+			<span class="orange upper">
+								<span class="posted-date">Posted on <a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/" title="8:17 am" rel="bookmark"><time class="entry-date published" datetime="2017-05-29T08:17:30+00:00">May 29, 2017</time></a></span> <span class="updated-date">Updated on <a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/" title="8:17 am" rel="bookmark"><time class="updated" datetime="2020-01-03T06:41:32+00:00">January 3, 2020</time></a></span>			</span>
+		</p>
+		<p data-adtags-visited="true"><img loading="lazy" data-attachment-id="269" data-permalink="https://itexpertsconsultant.wordpress.com/2016/04/10/deadlock-in-java/product-development-using-java/" data-orig-file="https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg" data-orig-size="536,423" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="product-development-using-java" data-image-description="" data-medium-file="https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=300" data-large-file="https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=536" class="alignleft wp-image-269" src="./ThreadLocal Example with Java 8 « IT Experts_files/product-development-using-java.jpg" alt="" width="121" height="96" srcset="https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=121&amp;h=96 121w, https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=242&amp;h=192 242w, https://itexpertsconsultant.files.wordpress.com/2015/06/product-development-using-java.jpg?w=150&amp;h=118 150w" sizes="(max-width: 121px) 100vw, 121px"></p>
+<h3>What is ThreadLocal in Java?</h3>
+<p data-adtags-visited="true">ThreadLocal is a specially provisioned functionality by JVM to provide isolated storage space for threads only. like the value of instance scoped variable are bound to a given instance of a class only. each object has its only values and they can not see each other value. so is the concept of ThreadLocal variables, they are local to the thread in the sense of object instances other thread except for the one which created it, can not see it.</p>
+<p data-adtags-visited="true">Like request, session and application scope of any Object, We can define a Thread Scope of any Object thus Object visibility&nbsp;would be only within the Thread and Every Thread has it execution life cycle, After a thread goes away, all of its copies of thread-local instances are subject to garbage collection (unless other references to these copies exist).</p>
+<p data-adtags-visited="true">Although we usually create a Synchronize &nbsp;Object for Thread safety in MultiThread application therefore only one Thread can be obtained a monitor to access shared Object Since shared Object is not thread-safe.</p>
+<blockquote><p>In Java 8, A new method is introdued &nbsp;to determine the initial value.</p>
+<pre>public static <s> ThreadLocal<s> withInitial(Supplier&lt;? extends S&gt; supplier) {
+    return new SuppliedThreadLocal&lt;&gt;(supplier);
+}</s></s></pre>
+</blockquote>
+<p data-adtags-visited="true">Here, a simple ThreadLocal example of Java 8 is demonstrated that how each Thread gets own ThreadLocal copy of variable and value remains the same even in the Iteration process and each thread is executing separately on the ThreadLocal variable.</p>
+<pre>import <span class="skimlinks-unlinked">java.util.concurrent.atomic.AtomicInteger</span>;
+import <span class="skimlinks-unlinked">java.util.stream.IntStream</span>;
+
+/**
+ * Created by MYPC on 5/29/2017.
+ */
+public class ThreadLocalExample {
+    private static final AtomicInteger transactionId = new AtomicInteger(10000);
+    private static final ThreadLocal threadLocal = ThreadLocal.withInitial(() -&gt; transactionId.getAndIncrement());
+
+    public static void main(String[] args) {
+
+        <span style="color:#0000ff;">// Thread 1 executing and getting same Transaction Id for all iteration</span>
+        new Thread(() -&gt; <span class="skimlinks-unlinked">IntStream.range(0</span>, 3).forEach(val -&gt; {
+            <span class="skimlinks-unlinked">System.out.println(Thread.currentThread().getName</span>() + " &gt; " + <span class="skimlinks-unlinked">threadLocal.get</span>());
+        })).start();
+
+        <span style="color:#0000ff;">// Thread 2 executing and getting same Transaction Id for all iteration</span>
+        new Thread(() -&gt; <span class="skimlinks-unlinked">IntStream.range(0</span>, 3).forEach(val -&gt; {
+            <span class="skimlinks-unlinked">System.out.println(Thread.currentThread().getName</span>() + " &gt; " + <span class="skimlinks-unlinked">threadLocal.get</span>());
+        })).start();
+       <span style="color:#0000ff;"> // Thread 3 executing and getting same Transaction Id for all iteration</span>
+        new Thread(() -&gt; <span class="skimlinks-unlinked">IntStream.range(0</span>, 3).forEach(val -&gt; {
+            <span class="skimlinks-unlinked">System.out.println(Thread.currentThread().getName</span>() + " &gt; " + <span class="skimlinks-unlinked">threadLocal.get</span>());
+        })).start();
+
+    }
+}</pre>
+<h5>Execution Output :-</h5>
+<blockquote><p>Thread-1 &gt; 10001<br>
+Thread-1 &gt; 10001<br>
+Thread-1 &gt; 10001<br>
+Thread-0 &gt; 10000<br>
+Thread-0 &gt; 10000<br>
+Thread-0 &gt; 10000<br>
+Thread-2 &gt; 10002<br>
+Thread-2 &gt; 10002<br>
+Thread-2 &gt; 10002</p></blockquote>
+<p class="inline-ad-slot" id="inline-ad-0" style="display:block;height:auto;margin-left:auto;margin-right:auto;overflow:hidden;padding:0;width:320px;" data-adtags-width="705" data-adtags-visited="true"><div style="height:100px;margin:0;overflow:hidden;padding:0;position:relative;width:320px;" class="ata-frame-wrapper">
+            <div class="user-feedback" style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#f1f1f1;white-space:nowrap;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;box-shadow:0px 1px 2px 0px inset #999;margin:0;display:none;table-layout:fixed;letter-spacing:0.2px;z-index:5000;padding:0;">
+                
+                <div style="box-sizing:border-box;text-align:center;display:table-cell;padding:0;vertical-align:middle;position:absolute;top:50%;margin:-25px 0 0 0;">
+                    <div style="color:#404040;margin:8px 0 0 0;white-space:normal;display:none;text-align:center;padding:0;line-height:12px;" class="user-feedback__thank-message">
+                        <div style="font-weight:bold;text-align:center;line-height:12px;">We've received your report.</div>
+                        <br>
+                        Thanks for your feedback!
+                    </div>
+                    <a class="user-feedback__reason" data-reason-id="1" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;margin-left:0;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Seen too often</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="2" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Not relevant</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="3" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Offensive</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="4" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Broken</span>
+                </div>
+            </a>
+                </div>
+                
+            <a class="user-feedback__slider" data-direction="left" style="box-sizing:border-box;position:absolute;top:50%;margin:-25px 0 0 0;height:50px;text-align:center;cursor:pointer;width:30px;border:1px solid transparent;background-color:rgba(0,0,0,0.4);padding:0;border-top-right-radius:4px;border-bottom-right-radius:4px;left:0;;display: none;">
+                <div style="box-sizing:border-box;position:absolute;top:50%;left:50%;height:24px;width:24px;margin:-12px 0 0 -12px;padding:0;background-image:url(&#39;data:image/svg+xml;charset=UTF-8,&lt;svg xmlns=\&#39;http://www.w3.org/2000/svg\&#39; viewBox=\&#39;0 0 30 30\&#39; fill=\&#39;none\&#39; stroke=\&#39;%23fff\&#39; stroke-width=\&#39;4px\&#39; stroke-linecap=\&#39;round\&#39; stroke-linejoin=\&#39;round\&#39;&gt;&lt;path d=\&#39;M20,5L10,15L20,25\&#39;/&gt;&lt;/svg&gt;&#39;);"></div>
+            </a>
+            <a class="user-feedback__slider" data-direction="right" style="box-sizing:border-box;position:absolute;top:50%;margin:-25px 0 0 0;height:50px;text-align:center;cursor:pointer;width:30px;border:1px solid transparent;background-color:rgba(0,0,0,0.4);padding:0;border-top-left-radius:4px;border-bottom-left-radius:4px;right:0;">
+                <div style="box-sizing:border-box;position:absolute;top:50%;left:50%;height:24px;width:24px;margin:-12px 0 0 -12px;padding:0;background-image:url(&#39;data:image/svg+xml;charset=UTF-8,&lt;svg xmlns=\&#39;http://www.w3.org/2000/svg\&#39; viewBox=\&#39;0 0 30 30\&#39; fill=\&#39;none\&#39; stroke=\&#39;%23fff\&#39; stroke-width=\&#39;4px\&#39; stroke-linecap=\&#39;round\&#39; stroke-linejoin=\&#39;round\&#39;&gt;&lt;path d=\&#39;M10,5L20,15L10,25\&#39;/&gt;&lt;/svg&gt;&#39;);"></div>
+            </a>
+        
+            </div>
+        
+                <iframe frameborder="0" height="100" scrolling="no" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(9).html" style="border:none;height:100px;margin:0;overflow:hidden;width:320px;" width="320"></iframe>
+            </div><div id="inline-ad-0__controls" class="ata-controls" style="height:10px;line-height:10px;margin:0;padding:0;text-align:right;width:320px;"><span id="inline-ad-0__complain-btn" class="ata-controls__complain-btn" style="color:#c8c7cc;cursor:pointer;font-family:Verdana, sans-serif;font-size:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;float:right;">Report this ad</span></div></p><p data-adtags-visited="true">Here are some snippet codes of ThreadLocal that could be used in the Advance level. Here last Thread calls use ThreadLocal and share the value to all methods inside Thread i.e HttpRequest call in which keep/generate transaction Id or Authentication Token in ThreadLocal and spare into all subsequent method calls inside the Thread.</p>
+<pre>package com.example.current;
+
+import <span class="skimlinks-unlinked">java.io.IOException</span>;
+import <span class="skimlinks-unlinked">java.util.UUID</span>;
+import <span class="skimlinks-unlinked">java.util.concurrent.atomic.AtomicInteger</span>;
+
+
+ public class ThreadLocalTest{
+     public static void main(String[] args) {
+         AuthTokenContextTest tokenContextTest = new AuthTokenContextTest();
+         new Thread(()-&gt;tokenContextTest.execute(Thread.currentThread().getName())).start();
+         new Thread(()-&gt;tokenContextTest.execute(Thread.currentThread().getName())).start();
+         new Thread(()-&gt;tokenContextTest.execute(Thread.currentThread().getName())).start();
+         new Thread(()-&gt;tokenContextTest.execute(Thread.currentThread().getName())).start();
+         new Thread(()-&gt;tokenContextTest.execute(Thread.currentThread().getName())).start();
+         new Thread(()-&gt;tokenContextTest.execute(Thread.currentThread().getName())).start();
+
+         new Thread(()-&gt;{
+
+             tokenContextTest.execute(Thread.currentThread().getName());
+             tokenContextTest.execute(Thread.currentThread().getName());
+             tokenContextTest.execute(Thread.currentThread().getName());
+             tokenContextTest.execute(Thread.currentThread().getName());
+             tokenContextTest.execute(Thread.currentThread().getName());
+
+         }).start();
+
+
+     }
+ }
+
+ class AuthTokenContextTest {
+
+    private final AuthTokenContext authTokenContext = new AuthTokenContext(new LoginAuthTokenService());
+
+
+    public void execute(String message)  {
+        String authToken = <span class="skimlinks-unlinked">authTokenContext.get</span>();
+        <span class="skimlinks-unlinked">System.out.println</span>(" Message is " + message + ", token is " + authToken);
+    }
+
+    static class AuthTokenContext {
+        private static ThreadLocal THREAD_CONTEXT;
+
+        public AuthTokenContext(LoginAuthTokenService loginAuthTokenService) {
+            THREAD_CONTEXT = ThreadLocal.withInitial(() -&gt; loginAuthTokenService.getAuthToken());
+        }
+
+        public void set(LoginAuthTokenService loginAuthTokenService) {
+            <span class="skimlinks-unlinked">THREAD_CONTEXT.set(loginAuthTokenService.getAuthToken</span>());
+        }
+
+        public String get() {
+            return <span class="skimlinks-unlinked">THREAD_CONTEXT.get</span>();
+        }
+
+    }
+
+    final class LoginAuthTokenService {
+        private String login() throws IOException {
+            return UUID.randomUUID().toString();
+        }
+
+        public String getAuthToken() {
+            AtomicInteger retryCount = new AtomicInteger(1);
+            while (true) {
+                try {
+                    synchronized (<span class="skimlinks-unlinked">LoginAuthTokenService.class</span>) {
+                        return login();
+                    }
+                } catch (Exception e) {
+                    <span class="skimlinks-unlinked">System.out.println(e</span>);
+                }
+            }
+        }
+    }
+}
+
+</pre>
+<p class="inline-ad-slot" id="inline-ad-1" style="display:block;height:auto;margin-left:auto;margin-right:auto;overflow:hidden;padding:0;width:320px;" data-adtags-width="705" data-adtags-visited="true"><div style="height:50px;margin:0;overflow:hidden;padding:0;position:relative;width:320px;" class="ata-frame-wrapper">
+            <div class="user-feedback" style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#f1f1f1;white-space:nowrap;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;box-shadow:0px 1px 2px 0px inset #999;margin:0;display:none;table-layout:fixed;letter-spacing:0.2px;z-index:5000;padding:0;">
+                
+                <div style="box-sizing:border-box;text-align:center;display:table-cell;padding:0;vertical-align:middle;position:absolute;top:50%;margin:-25px 0 0 0;">
+                    <div style="color:#404040;margin:8px 0 0 0;white-space:normal;display:none;text-align:center;padding:0;line-height:12px;" class="user-feedback__thank-message">
+                        <div style="font-weight:bold;text-align:center;line-height:12px;">We've received your report.</div>
+                        <br>
+                        Thanks for your feedback!
+                    </div>
+                    <a class="user-feedback__reason" data-reason-id="1" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;margin-left:0;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Seen too often</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="2" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Not relevant</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="3" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Offensive</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="4" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:50px;border:1px solid #E0E0E0;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:-1px;margin-top:0;box-shadow:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Broken</span>
+                </div>
+            </a>
+                </div>
+                
+            <a class="user-feedback__slider" data-direction="left" style="box-sizing:border-box;position:absolute;top:50%;margin:-25px 0 0 0;height:50px;text-align:center;cursor:pointer;width:30px;border:1px solid transparent;background-color:rgba(0,0,0,0.4);padding:0;border-top-right-radius:4px;border-bottom-right-radius:4px;left:0;;display: none;">
+                <div style="box-sizing:border-box;position:absolute;top:50%;left:50%;height:24px;width:24px;margin:-12px 0 0 -12px;padding:0;background-image:url(&#39;data:image/svg+xml;charset=UTF-8,&lt;svg xmlns=\&#39;http://www.w3.org/2000/svg\&#39; viewBox=\&#39;0 0 30 30\&#39; fill=\&#39;none\&#39; stroke=\&#39;%23fff\&#39; stroke-width=\&#39;4px\&#39; stroke-linecap=\&#39;round\&#39; stroke-linejoin=\&#39;round\&#39;&gt;&lt;path d=\&#39;M20,5L10,15L20,25\&#39;/&gt;&lt;/svg&gt;&#39;);"></div>
+            </a>
+            <a class="user-feedback__slider" data-direction="right" style="box-sizing:border-box;position:absolute;top:50%;margin:-25px 0 0 0;height:50px;text-align:center;cursor:pointer;width:30px;border:1px solid transparent;background-color:rgba(0,0,0,0.4);padding:0;border-top-left-radius:4px;border-bottom-left-radius:4px;right:0;">
+                <div style="box-sizing:border-box;position:absolute;top:50%;left:50%;height:24px;width:24px;margin:-12px 0 0 -12px;padding:0;background-image:url(&#39;data:image/svg+xml;charset=UTF-8,&lt;svg xmlns=\&#39;http://www.w3.org/2000/svg\&#39; viewBox=\&#39;0 0 30 30\&#39; fill=\&#39;none\&#39; stroke=\&#39;%23fff\&#39; stroke-width=\&#39;4px\&#39; stroke-linecap=\&#39;round\&#39; stroke-linejoin=\&#39;round\&#39;&gt;&lt;path d=\&#39;M10,5L20,15L10,25\&#39;/&gt;&lt;/svg&gt;&#39;);"></div>
+            </a>
+        
+            </div>
+        
+                <iframe frameborder="0" height="50" scrolling="no" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(10).html" style="border:none;height:50px;margin:0;overflow:hidden;width:320px;" width="320"></iframe>
+            </div><div id="inline-ad-1__controls" class="ata-controls" style="height:10px;line-height:10px;margin:0;padding:0;text-align:right;width:320px;"><span id="inline-ad-1__complain-btn" class="ata-controls__complain-btn" style="color:#c8c7cc;cursor:pointer;font-family:Verdana, sans-serif;font-size:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;float:right;">Report this ad</span></div></p><p data-adtags-visited="true">Here is output</p>
+<blockquote><p>Message is Thread-0, token is e96b08ab-54d0-4f8f-a987-6673bd9c1581<br>
+Message is Thread-4, token is 7d8fd401-4566-402e-9e07-c803eb7bbcaf<br>
+Message is Thread-5, token is eebca524-476e-45c9-95c6-6f61421baaa8<br>
+<strong>Message is Thread-6, token is b2496582-da72-4e49-9f4d-b2671a5986d0</strong><br>
+<strong>Message is Thread-6, token is b2496582-da72-4e49-9f4d-b2671a5986d0</strong><br>
+<strong>Message is Thread-6, token is b2496582-da72-4e49-9f4d-b2671a5986d0</strong><br>
+<strong>Message is Thread-6, token is b2496582-da72-4e49-9f4d-b2671a5986d0</strong><br>
+<strong>Message is Thread-6, token is b2496582-da72-4e49-9f4d-b2671a5986d0</strong><br>
+Message is Thread-2, token is d7e9e5d0-e8ed-46c3-8c78-2dd4b95bab10<br>
+Message is Thread-3, token is 3aa2f44c-5bfd-42a0-9706-8ce899752b7b<br>
+Message is Thread-1, token is 8de6ec02-c104-457b-ae32-9b95d80de409</p></blockquote>
+<p data-adtags-visited="true">&nbsp;</p>
+<div id="atatags-370373-603409e908b65">
+        <script type="text/javascript">
+            __ATA.cmd.push(function() {
+                __ATA.initVideoSlot('atatags-370373-603409e908b65', {
+                    sectionId: '370373',
+                    format: 'inread'
+                });
+            });
+        </script>
+    </div>			<div id="atatags-26942-603409e908b9c" data-adtags-width="705" style="display:block;height:272px;margin:0 auto;overflow:hidden;padding:0;width:300px;"><div style="font:10px &#39;Open Sans&#39;, Arial, sans-serif;height:12px;margin:0;padding:0;text-align:left;">Advertisements</div><div style="height:250px;margin:0;overflow:hidden;padding:0;position:relative;width:300px;" class="ata-frame-wrapper">
+            <div class="user-feedback" style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#f1f1f1;white-space:nowrap;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;box-shadow:0px 1px 2px 0px inset #999;margin:0;display:none;table-layout:fixed;letter-spacing:0.2px;z-index:5000;padding:0;">
+                <div style="color:#808080;font-size:10px;line-height:10px;text-align:center;margin:0;padding:0;position:absolute;top:4px;width:100%;">Powered by wordads.co</div>
+                <div style="box-sizing:border-box;padding:5px;text-align:center;display:table-cell;vertical-align:middle;margin:0;width:100%;">
+                    <div style="color:#404040;margin:8px 0 0 0;white-space:normal;display:none;text-align:center;padding:0;line-height:12px;" class="user-feedback__thank-message">
+                        <div style="font-weight:bold;text-align:center;line-height:12px;">We've received your report.</div>
+                        <br>
+                        Thanks for your feedback!
+                    </div>
+                    <a class="user-feedback__reason" data-reason-id="1" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Seen too often</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="2" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Not relevant</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="3" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Offensive</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="4" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Broken</span>
+                </div>
+            </a>
+                </div>
+                
+            </div>
+        
+                <iframe frameborder="0" height="250" scrolling="no" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(11).html" style="border:none;height:250px;margin:0;overflow:hidden;width:300px;" width="300"></iframe>
+            </div><div id="atatags-26942-603409e908b9c__controls" class="ata-controls" style="height:10px;line-height:10px;margin:0;padding:0;text-align:right;width:300px;"><span id="atatags-26942-603409e908b9c__complain-btn" class="ata-controls__complain-btn" style="color:#c8c7cc;cursor:pointer;font-family:Verdana, sans-serif;font-size:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;float:right;">Report this ad</span></div></div>
+			
+			<script>
+				__ATA.cmd.push(function() {
+					__ATA.initDynamicSlot({
+						id: 'atatags-26942-603409e908b9c',
+						location: 120,
+						formFactor: '001',
+						label: {
+							text: 'Advertisements',
+						},
+						creative: {
+							reportAd: {
+								text: 'Report this ad',
+							},
+							privacySettings: {
+								text: 'Privacy',
+								
+							}
+						}
+					});
+				});
+			</script><div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul data-sharing-events-added="true"><li class="share-twitter"><a rel="nofollow noopener noreferrer" data-shared="sharing-twitter-1607" class="share-twitter sd-button share-icon" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-1607" class="share-facebook sd-button share-icon" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/?share=facebook&amp;nb=1" target="_blank" title="Click to share on Facebook"><span>Facebook</span></a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-91233490-1607-603409e90918c" data-src="//widgets.wp.com/likes/index.html?ver=20200826#blog_id=91233490&amp;post_id=1607&amp;origin=itexpertsconsultant.wordpress.com&amp;obj_id=91233490-1607-603409e90918c" data-name="like-post-frame-91233490-1607-603409e90918c"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><iframe class="post-likes-widget jetpack-likes-widget" name="like-post-frame-91233490-1607-603409e90918c" height="55px" width="100%" frameborder="0" src="./ThreadLocal Example with Java 8 « IT Experts_files/index.html"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-minimal"><p class="jp-relatedposts-post jp-relatedposts-post0" data-post-id="234" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://itexpertsconsultant.wordpress.com/2015/05/17/what-is-singleton-pattern-and-its-uses/" title="What is Singleton pattern and it&#39;s uses ?" data-origin="1607" data-position="0">What is Singleton pattern and it's uses ?</a></span><span class="jp-relatedposts-post-context">In "Advance Java"</span></p><p class="jp-relatedposts-post jp-relatedposts-post1" data-post-id="1285" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://itexpertsconsultant.wordpress.com/2016/04/10/deadlock-in-java/" title="Deadlock in Java" data-origin="1607" data-position="1">Deadlock in Java</a></span><span class="jp-relatedposts-post-context">In "Java"</span></p><p class="jp-relatedposts-post jp-relatedposts-post2" data-post-id="277" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://itexpertsconsultant.wordpress.com/2015/06/10/why-java-2/" title="Why Java ?" data-origin="1607" data-position="2">Why Java ?</a></span><span class="jp-relatedposts-post-context">In "Java"</span></p></div></div></div>	</div>
+
+	<p class="post-meta">This entry was posted in <a href="https://itexpertsconsultant.wordpress.com/category/java/advance-java/" rel="category tag">Advance Java</a>, <a href="https://itexpertsconsultant.wordpress.com/category/java/" rel="category tag">Java</a>.</p>
+</div> <!-- end post -->
+			<div class="pagination pagination-centered">
+				<ul>
+					<li class="nav-previous"><a href="https://itexpertsconsultant.wordpress.com/2017/05/24/java-8-how-to-calculate-difference-between-two-dates/" rel="prev"> Java 8 : How to calculate difference between two&nbsp;Dates.</a></li>					<li class="nav-next"><a href="https://itexpertsconsultant.wordpress.com/2017/08/05/how-to-load-profile-specific-properties-files-in-spring-boot/" rel="next">How to load Profile Specific Properties files in Spring&nbsp;Boot </a></li>				</ul>
+			</div>
+			<div class="well">    <div id="comments" class="comments-area">
+
+    
+    
+    
+    	<div id="respond" class="comment-respond js">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://itexpertsconsultant.wordpress.com/wp-comments-post.php" method="post" id="commentform" class="comment-form"><input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="aa0f102fa6"><input type="hidden" name="_wp_http_referer" value="/2017/05/29/threadlocal-example-with-java-8/">
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest">
+
+<div class="comment-form-field comment-textarea">
+	
+	<div id="comment-form-comment"><textarea aria-hidden="true" tabindex="-1" style="position: absolute; inset: -999px auto auto 0px; border: 0px; padding: 0px; box-sizing: content-box; overflow-wrap: break-word; overflow: hidden; transition: none 0s ease 0s; height: 0px !important; min-height: 0px !important; font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif; font-size: 14px; font-weight: 400; font-style: normal; letter-spacing: 0px; text-transform: none; text-decoration: none solid rgba(0, 0, 0, 0.7); word-spacing: 0px; text-indent: 0px; line-height: 20px; width: 683px;" class="autosizejs "></textarea><textarea id="comment" name="comment" title="Enter your comment here..." placeholder="Enter your comment here..." style="height: 40px; overflow: hidden; overflow-wrap: break-word; resize: none;"></textarea></div>
+</div>
+
+<div id="comment-form-identity" style="display: none;">
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#comment-form-guest" id="postas-guest" class="nascar-signin-link" title="Login via Guest">
+									</a>
+			</li>
+			<li>
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#comment-form-load-service:WordPress.com" id="postas-wordpress" class="nascar-signin-link" title="Login via WordPress.com">
+					<svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24"><rect x="0" fill="none" width="24" height="24"></rect><g><path fill="#0087be" d="M12.158 12.786l-2.698 7.84c.806.236 1.657.365 2.54.365 1.047 0 2.05-.18 2.986-.51-.024-.037-.046-.078-.065-.123l-2.762-7.57zM3.008 12c0 3.56 2.07 6.634 5.068 8.092L3.788 8.342c-.5 1.117-.78 2.354-.78 3.658zm15.06-.454c0-1.112-.398-1.88-.74-2.48-.456-.74-.883-1.368-.883-2.11 0-.825.627-1.595 1.51-1.595.04 0 .078.006.116.008-1.598-1.464-3.73-2.36-6.07-2.36-3.14 0-5.904 1.613-7.512 4.053.21.008.41.012.58.012.94 0 2.395-.114 2.395-.114.484-.028.54.684.057.74 0 0-.487.058-1.03.086l3.275 9.74 1.968-5.902-1.4-3.838c-.485-.028-.944-.085-.944-.085-.486-.03-.43-.77.056-.742 0 0 1.484.114 2.368.114.94 0 2.397-.114 2.397-.114.486-.028.543.684.058.74 0 0-.488.058-1.03.086l3.25 9.665.897-2.997c.456-1.17.684-2.137.684-2.907zm1.82-3.86c.04.286.06.593.06.924 0 .912-.17 1.938-.683 3.22l-2.746 7.94c2.672-1.558 4.47-4.454 4.47-7.77 0-1.564-.4-3.033-1.1-4.314zM12 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"></path></g></svg>				</a>
+			</li>
+			<li>
+			<iframe id="googleplus-sign-in" name="googleplus-sign-in" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(12).html" width="24" height="24" scrolling="no" allowtransparency="true" seamless="seamless" frameborder="0"></iframe>
+			</li>
+			<li>
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#comment-form-load-service:Twitter" id="postas-twitter" class="nascar-signin-link" title="Login via Twitter">
+					<svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24"><rect x="0" fill="none" width="24" height="24"></rect><g><path fill="#1DA1F2" d="M22.23 5.924c-.736.326-1.527.547-2.357.646.847-.508 1.498-1.312 1.804-2.27-.793.47-1.67.812-2.606.996C18.325 4.498 17.258 4 16.078 4c-2.266 0-4.103 1.837-4.103 4.103 0 .322.036.635.106.935-3.41-.17-6.433-1.804-8.457-4.287-.353.607-.556 1.312-.556 2.064 0 1.424.724 2.68 1.825 3.415-.673-.022-1.305-.207-1.86-.514v.052c0 1.988 1.415 3.647 3.293 4.023-.344.095-.707.145-1.08.145-.265 0-.522-.026-.773-.074.522 1.63 2.038 2.817 3.833 2.85-1.404 1.1-3.174 1.757-5.096 1.757-.332 0-.66-.02-.98-.057 1.816 1.164 3.973 1.843 6.29 1.843 7.547 0 11.675-6.252 11.675-11.675 0-.178-.004-.355-.012-.53.802-.578 1.497-1.3 2.047-2.124z"></path></g></svg>				</a>
+			</li>
+			<li>
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#comment-form-load-service:Facebook" id="postas-facebook" class="nascar-signin-link" title="Login via Facebook">
+					<svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24"><rect x="0" fill="none" width="24" height="24"></rect><g><path fill="#3B5998" d="M20.007 3H3.993C3.445 3 3 3.445 3 3.993v16.013c0 .55.445.994.993.994h8.62v-6.97H10.27V11.31h2.346V9.31c0-2.325 1.42-3.59 3.494-3.59.993 0 1.847.073 2.096.106v2.43h-1.438c-1.128 0-1.346.537-1.346 1.324v1.734h2.69l-.35 2.717h-2.34V21h4.587c.548 0 .993-.445.993-.993V3.993c0-.548-.445-.993-.993-.993z"></path></g></svg>				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="./ThreadLocal Example with Java 8 « IT Experts_files/ad516503a11cd5ca435acc9bb6523536" alt="Gravatar" width="25" class="no-grav grav-hashed grav-hijack" id="grav-ad516503a11cd5ca435acc9bb6523536-0" originals="25" scale="2">
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="url" value=""></div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./ThreadLocal Example with Java 8 « IT Experts_files/ad516503a11cd5ca435acc9bb6523536" alt="WordPress.com Logo" width="25" class="no-grav grav-hashed grav-hijack" id="grav-ad516503a11cd5ca435acc9bb6523536-1" originals="25" scale="2">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="">
+						<p class="comment-form-posting-as pa-wordpress">
+			<strong></strong>
+			You are commenting using your <span class="skimlinks-unlinked">WordPress.com</span> account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;wordpress&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24"><rect x="0" fill="none" width="24" height="24"></rect><g><path fill="#0087be" d="M12.158 12.786l-2.698 7.84c.806.236 1.657.365 2.54.365 1.047 0 2.05-.18 2.986-.51-.024-.037-.046-.078-.065-.123l-2.762-7.57zM3.008 12c0 3.56 2.07 6.634 5.068 8.092L3.788 8.342c-.5 1.117-.78 2.354-.78 3.658zm15.06-.454c0-1.112-.398-1.88-.74-2.48-.456-.74-.883-1.368-.883-2.11 0-.825.627-1.595 1.51-1.595.04 0 .078.006.116.008-1.598-1.464-3.73-2.36-6.07-2.36-3.14 0-5.904 1.613-7.512 4.053.21.008.41.012.58.012.94 0 2.395-.114 2.395-.114.484-.028.54.684.057.74 0 0-.487.058-1.03.086l3.275 9.74 1.968-5.902-1.4-3.838c-.485-.028-.944-.085-.944-.085-.486-.03-.43-.77.056-.742 0 0 1.484.114 2.368.114.94 0 2.397-.114 2.397-.114.486-.028.543.684.058.74 0 0-.488.058-1.03.086l3.25 9.665.897-2.997c.456-1.17.684-2.137.684-2.907zm1.82-3.86c.04.286.06.593.06.924 0 .912-.17 1.938-.683 3.22l-2.746 7.94c2.672-1.558 4.47-4.454 4.47-7.77 0-1.564-.4-3.033-1.1-4.314zM12 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"></path></g></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./ThreadLocal Example with Java 8 « IT Experts_files/ad516503a11cd5ca435acc9bb6523536" alt="Google photo" width="25" class="no-grav grav-hashed grav-hijack" id="grav-ad516503a11cd5ca435acc9bb6523536-2" originals="25" scale="2">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="">
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="">
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="">
+						<p class="comment-form-posting-as pa-googleplus">
+			<strong></strong>
+			You are commenting using your Google account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;googleplus&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" x="0px" y="0px" viewBox="0 0 60 60"><path fill="#519bf7" d="M56.3,30c0,-1.6 -0.2,-3.4 -0.6,-5h-3.1H42.2H30v10.6h14.8C44,39.3 42,42 39.1,43.9l8.8,6.8C53,46 56.3,39 56.3,30z"></path><path fill="#3db366" d="M30,57.5c6.7,0 13.1,-2.4 17.9,-6.8l-8.8,-6.8c-2.5,1.6 -5.6,2.4 -9.1,2.4c-7.2,0 -13.3,-4.7 -15.4,-11.2l-9.3,7.1C9.8,51.3 19.1,57.5 30,57.5z"></path><path fill="#fdc600" d="M5.3,42.2l9.3,-7.1c-0.5,-1.6 -0.8,-3.3 -0.8,-5.1s0.3,-3.5 0.8,-5.1l-9.3,-7.1C3.5,21.5 2.5,25.6 2.5,30S3.5,38.5 5.3,42.2z"></path><path fill="#f15b44" d="M40.1,17.4l8,-8C43.3,5.1 37,2.5 30,2.5C19.1,2.5 9.8,8.7 5.3,17.8l9.3,7.1c2.1,-6.5 8.2,-11.1 15.4,-11.1C33.9,13.7 37.4,15.1 40.1,17.4z"></path></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./ThreadLocal Example with Java 8 « IT Experts_files/ad516503a11cd5ca435acc9bb6523536" alt="Twitter picture" width="25" class="no-grav grav-hashed grav-hijack" id="grav-ad516503a11cd5ca435acc9bb6523536-3" originals="25" scale="2">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="">
+						<p class="comment-form-posting-as pa-twitter">
+			<strong></strong>
+			You are commenting using your Twitter account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;twitter&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24"><rect x="0" fill="none" width="24" height="24"></rect><g><path fill="#1DA1F2" d="M22.23 5.924c-.736.326-1.527.547-2.357.646.847-.508 1.498-1.312 1.804-2.27-.793.47-1.67.812-2.606.996C18.325 4.498 17.258 4 16.078 4c-2.266 0-4.103 1.837-4.103 4.103 0 .322.036.635.106.935-3.41-.17-6.433-1.804-8.457-4.287-.353.607-.556 1.312-.556 2.064 0 1.424.724 2.68 1.825 3.415-.673-.022-1.305-.207-1.86-.514v.052c0 1.988 1.415 3.647 3.293 4.023-.344.095-.707.145-1.08.145-.265 0-.522-.026-.773-.074.522 1.63 2.038 2.817 3.833 2.85-1.404 1.1-3.174 1.757-5.096 1.757-.332 0-.66-.02-.98-.057 1.816 1.164 3.973 1.843 6.29 1.843 7.547 0 11.675-6.252 11.675-11.675 0-.178-.004-.355-.012-.53.802-.578 1.497-1.3 2.047-2.124z"></path></g></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./ThreadLocal Example with Java 8 « IT Experts_files/ad516503a11cd5ca435acc9bb6523536" alt="Facebook photo" width="25" class="no-grav grav-hashed grav-hijack" id="grav-ad516503a11cd5ca435acc9bb6523536-4" originals="25" scale="2">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="">
+						<p class="comment-form-posting-as pa-facebook">
+			<strong></strong>
+			You are commenting using your Facebook account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;facebook&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24"><rect x="0" fill="none" width="24" height="24"></rect><g><path fill="#3B5998" d="M20.007 3H3.993C3.445 3 3 3.445 3 3.993v16.013c0 .55.445.994.993.994h8.62v-6.97H10.27V11.31h2.346V9.31c0-2.325 1.42-3.59 3.494-3.59.993 0 1.847.073 2.096.106v2.43h-1.438c-1.128 0-1.346.537-1.346 1.324v1.734h2.69l-.35 2.717h-2.34V21h4.587c.548 0 .993-.445.993-.993V3.993c0-.548-.445-.993-.993-.993z"></path></g></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function () {
+
+	function hide( sel ) {
+		var el = document.querySelector( sel );
+		if ( el ) {
+			el.style.setProperty( 'display', 'none' );
+		}
+	}
+
+	function show( sel ) {
+		var el = document.querySelector( sel );
+		if ( el ) {
+			el.style.removeProperty( 'display' );
+		}
+	}
+
+	var input = document.createElement( 'input' );
+	var comment = document.querySelector( '#comment' );
+
+	if ( input && comment && 'placeholder' in input ) {
+		var label = document.querySelector( '.comment-textarea label' );
+		if ( label ) {
+			var text = label.textContent;
+			label.parentNode.removeChild( label );
+			comment.setAttribute( 'placeholder', text );
+		}
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	hide( '#comment-form-identity' );
+	hide( '#comment-form-subscribe' );
+	hide( '#commentform .form-submit' );
+
+	if ( comment ) {
+		comment.style.height = '10px';
+
+		var handler = function () {
+			comment.style.height = HighlanderComments.initialHeight + 'px';
+			show( '#comment-form-identity' );
+			show( '#comment-form-subscribe' );
+			show( '#commentform .form-submit' );
+			HighlanderComments.resizeCallback();
+
+			comment.removeEventListener( 'focus', handler );
+		};
+
+		comment.addEventListener( 'focus', handler );
+	}
+}
+
+if ( document.readyState !== 'loading' ) {
+	highlander_expando_javascript();
+} else {
+	if ( typeof window.jQuery === 'function' ) {
+		// Use jQuery's `ready` if available.
+		// This solves some scheduling issues between this script and the main highlander script.
+		jQuery( document ).ready( highlander_expando_javascript );
+	} else {
+		// If not available, add a vanilla event listener.
+		document.addEventListener( 'DOMContentLoaded', highlander_expando_javascript );
+	}
+}
+
+</script>
+
+<div id="comment-form-subscribe" style="display: none;">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;"> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of new comments via email.</label></p><p class="post-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto;"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog" style="display: inline;">Notify me of new posts via email.</label></p></div>
+
+
+
+
+<p class="form-submit" style="display: none;"><input name="submit" type="submit" id="comment-submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="1607" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="6e162e8f3f"></p>
+<input type="hidden" name="genseq" value="1614023145">
+<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100" style="display: none !important;"></textarea><input type="hidden" id="ak_js" name="ak_js" value="1614023146446"></form>	</div><!-- #respond -->
+	<div style="clear: both"></div>
+</div><!-- #comments -->
+</div>
+							</div>
+			</div>
+			
+
+<aside class="span4" role="complementary">
+	<div class="sidebar">
+		
+		<div id="search-4" class="widget widget_search"><h2 class="widget-title">Search</h2><form role="search" method="get" id="searchform" class="searchform" action="https://itexpertsconsultant.wordpress.com/">
+				<div>
+					<label class="screen-reader-text" for="s">Search for:</label>
+					<input type="text" value="" name="s" id="s">
+					<input type="submit" id="searchsubmit" value="Search">
+				</div>
+			</form></div><div id="facebook-likebox-2" class="widget widget_facebook_likebox"><h2 class="widget-title"><a href="https://www.facebook.com/itexpertsconsultant">IT Experts</a></h2>		<div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; width: 0px; height: 0px;"><div></div></div></div>
+		<div class="fb-page fb_iframe_widget" data-href="https://www.facebook.com/itexpertsconsultant" data-width="200" data-height="432" data-hide-cover="false" data-show-facepile="true" data-tabs="false" data-hide-cta="false" data-small-header="false" fb-xfbml-state="rendered" fb-iframe-plugin-query="app_id=249643311490&amp;container_width=200&amp;height=432&amp;hide_cover=false&amp;hide_cta=false&amp;href=https%3A%2F%2Fwww.facebook.com%2Fitexpertsconsultant&amp;locale=en_US&amp;sdk=joey&amp;show_facepile=true&amp;small_header=false&amp;tabs=false&amp;width=200"><span style="vertical-align: bottom; width: 200px; height: 130px;"><iframe name="f38d27dcfde134" width="200px" height="432px" data-testid="fb:page Facebook Social Plugin" title="fb:page Facebook Social Plugin" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" src="./ThreadLocal Example with Java 8 « IT Experts_files/page.html" style="border: none; visibility: visible; width: 200px; height: 130px;" class=""></iframe></span></div>
+		</div><div id="blog-stats-2" class="widget widget_blog-stats"><h2 class="widget-title">Blog Stats</h2>		<ul>
+			<li>182,340 hits</li>
+		</ul>
+		</div><div id="top-posts-2" class="widget widget_top-posts"><h2 class="widget-title">Top Posts &amp; Pages</h2><ul>				<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2016/08/03/how-to-readwrite-csv-file-to-map-in-java/" class="bump-view" data-bump-view="tp">How to read/write CSV file to Map in java</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2017/08/05/how-to-load-profile-specific-properties-files-in-spring-boot/" class="bump-view" data-bump-view="tp">How to load Profile Specific Properties files in Spring Boot</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2016/02/23/clear-evict-and-close-methods-in-hibernate/" class="bump-view" data-bump-view="tp">clear(), evict() and close() methods in Hibernate</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2017/02/22/create-a-new-groovy-project-using-maven/" class="bump-view" data-bump-view="tp">Create a new Groovy project using maven</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2016/01/25/how-to-implement-jms-with-tomcat-durable-subscription-example/" class="bump-view" data-bump-view="tp">How to Implement JMS with Tomcat - Durable Subscription Example</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2016/08/03/json-schema-validation-example-in-java/" class="bump-view" data-bump-view="tp">JSON Schema Validation example in java</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2015/08/14/how-to-rounding-numbers-to-a-specified-precision-in-xslt-1-0/" class="bump-view" data-bump-view="tp">How to rounding-off numbers to a specified precision in xslt 1.0</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2016/01/29/how-to-run-external-java-program-by-using-processbuilder/" class="bump-view" data-bump-view="tp">How to run external JAVA program by using ProcessBuilder</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2015/06/29/arithmetic-operation-using-angularjs/" class="bump-view" data-bump-view="tp">Arithmetic Operation Using AngularJS</a>					</li>
+								<li>
+					<a href="https://itexpertsconsultant.wordpress.com/2016/01/25/routeprovider-vs-stateprovider-in-angularjs/" class="bump-view" data-bump-view="tp">$routeProvider vs $stateProvider in AngularJs</a>					</li>
+				</ul></div><div id="archives-4" class="widget widget_archive"><h2 class="widget-title">Archives</h2>
+			<ul>
+					<li><a href="https://itexpertsconsultant.wordpress.com/2018/02/">February 2018</a>&nbsp;(4)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2018/01/">January 2018</a>&nbsp;(1)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/12/">December 2017</a>&nbsp;(1)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/11/">November 2017</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/08/">August 2017</a>&nbsp;(4)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/05/">May 2017</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/04/">April 2017</a>&nbsp;(1)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/02/">February 2017</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2017/01/">January 2017</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/10/">October 2016</a>&nbsp;(1)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/09/">September 2016</a>&nbsp;(1)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/08/">August 2016</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/07/">July 2016</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/05/">May 2016</a>&nbsp;(2)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/04/">April 2016</a>&nbsp;(7)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/03/">March 2016</a>&nbsp;(4)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/02/">February 2016</a>&nbsp;(12)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2016/01/">January 2016</a>&nbsp;(10)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/12/">December 2015</a>&nbsp;(5)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/11/">November 2015</a>&nbsp;(3)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/10/">October 2015</a>&nbsp;(5)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/09/">September 2015</a>&nbsp;(3)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/08/">August 2015</a>&nbsp;(4)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/07/">July 2015</a>&nbsp;(6)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/06/">June 2015</a>&nbsp;(12)</li>
+	<li><a href="https://itexpertsconsultant.wordpress.com/2015/05/">May 2015</a>&nbsp;(10)</li>
+			</ul>
+
+			</div><div id="jetpack_display_posts_widget-2" class="widget widget_jetpack_display_posts_widget"></div><div id="wp_tag_cloud-2" class="widget wp_widget_tag_cloud"><h2 class="widget-title">Tags</h2><div style="overflow:hidden"><a href="https://itexpertsconsultant.wordpress.com/tag/angularjs/" class="tag-cloud-link tag-link-68515894 tag-link-position-1" style="font-size: 13.185185185185pt;" aria-label="AngularJS (3 items)">AngularJS</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/class-diagram/" class="tag-cloud-link tag-link-4461502 tag-link-position-2" style="font-size: 8pt;" aria-label="Class Diagram (1 item)">Class Diagram</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/concurrency/" class="tag-cloud-link tag-link-214618 tag-link-position-3" style="font-size: 8pt;" aria-label="Concurrency (1 item)">Concurrency</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/hiber/" class="tag-cloud-link tag-link-332226 tag-link-position-4" style="font-size: 8pt;" aria-label="hiber (1 item)">hiber</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/hibernate/" class="tag-cloud-link tag-link-17907 tag-link-position-5" style="font-size: 22pt;" aria-label="Hibernate (12 items)">Hibernate</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/interview-question/" class="tag-cloud-link tag-link-364226 tag-link-position-6" style="font-size: 8pt;" aria-label="Interview Question (1 item)">Interview Question</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/java8/" class="tag-cloud-link tag-link-44066545 tag-link-position-7" style="font-size: 11.111111111111pt;" aria-label="Java8 (2 items)">Java8</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/jms/" class="tag-cloud-link tag-link-254692 tag-link-position-8" style="font-size: 11.111111111111pt;" aria-label="JMS (2 items)">JMS</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/mongodb/" class="tag-cloud-link tag-link-21954763 tag-link-position-9" style="font-size: 8pt;" aria-label="MongoDB (1 item)">MongoDB</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/processbuilder/" class="tag-cloud-link tag-link-59369368 tag-link-position-10" style="font-size: 8pt;" aria-label="ProcessBuilder (1 item)">ProcessBuilder</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/restful/" class="tag-cloud-link tag-link-697690 tag-link-position-11" style="font-size: 8pt;" aria-label="RESTful (1 item)">RESTful</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/serialization-in-java-java/" class="tag-cloud-link tag-link-354768737 tag-link-position-12" style="font-size: 13.185185185185pt;" aria-label="Serialization in Java Java (3 items)">Serialization in Java Java</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/spring/" class="tag-cloud-link tag-link-9486 tag-link-position-13" style="font-size: 14.913580246914pt;" aria-label="Spring (4 items)">Spring</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/spring-security/" class="tag-cloud-link tag-link-3428272 tag-link-position-14" style="font-size: 8pt;" aria-label="Spring-Security (1 item)">Spring-Security</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/transaction/" class="tag-cloud-link tag-link-306448 tag-link-position-15" style="font-size: 8pt;" aria-label="Transaction (1 item)">Transaction</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/transient/" class="tag-cloud-link tag-link-555291 tag-link-position-16" style="font-size: 8pt;" aria-label="transient (1 item)">transient</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/wait-notify/" class="tag-cloud-link tag-link-54126993 tag-link-position-17" style="font-size: 8pt;" aria-label="wait &amp; notify (1 item)">wait &amp; notify</a>
+<a href="https://itexpertsconsultant.wordpress.com/tag/web-vs-application-server/" class="tag-cloud-link tag-link-374608531 tag-link-position-18" style="font-size: 8pt;" aria-label="Web vs Application Server (1 item)">Web vs Application Server</a></div></div>			<div id="atatags-286348-603409e90d052" data-adtags-width="320" style="display:block;height:622px;margin:0 auto;overflow:hidden;padding:0;width:120px;"><div style="font:10px &#39;Open Sans&#39;, Arial, sans-serif;height:12px;margin:0;padding:0;text-align:left;">Advertisements</div><div style="height:600px;margin:0;overflow:hidden;padding:0;position:relative;width:120px;" class="ata-frame-wrapper">
+            <div class="user-feedback" style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#f1f1f1;white-space:nowrap;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;box-shadow:0px 1px 2px 0px inset #999;margin:0;display:none;table-layout:fixed;letter-spacing:0.2px;z-index:5000;padding:0;">
+                <div style="color:#808080;font-size:10px;line-height:10px;text-align:center;margin:0;padding:0;position:absolute;top:4px;width:100%;">Powered by wordads.co</div>
+                <div style="box-sizing:border-box;padding:5px;text-align:center;display:table-cell;vertical-align:middle;margin:0;width:100%;">
+                    <div style="color:#404040;margin:8px 0 0 0;white-space:normal;display:none;text-align:center;padding:0;line-height:12px;" class="user-feedback__thank-message">
+                        <div style="font-weight:bold;text-align:center;line-height:12px;">We've received your report.</div>
+                        <br>
+                        Thanks for your feedback!
+                    </div>
+                    <a class="user-feedback__reason" data-reason-id="1" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Seen too often</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="2" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Not relevant</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="3" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Offensive</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="4" style="border-radius:2px;position:relative;overflow:hidden;display:block;padding:1px 5px;width:110px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Broken</span>
+                </div>
+            </a>
+                </div>
+                
+            </div>
+        
+                <iframe frameborder="0" height="600" scrolling="no" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(13).html" style="border:none;height:600px;margin:0;overflow:hidden;width:120px;" width="120"></iframe>
+            </div><div id="atatags-286348-603409e90d052__controls" class="ata-controls" style="height:10px;line-height:10px;margin:0;padding:0;text-align:right;width:120px;"><span id="atatags-286348-603409e90d052__complain-btn" class="ata-controls__complain-btn" style="color:#c8c7cc;cursor:pointer;font-family:Verdana, sans-serif;font-size:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;float:right;">Report this ad</span></div></div>
+			
+			<script>
+				__ATA.cmd.push(function() {
+					__ATA.initDynamicSlot({
+						id: 'atatags-286348-603409e90d052',
+						location: 140,
+						formFactor: '003',
+						label: {
+							text: 'Advertisements',
+						},
+						creative: {
+							reportAd: {
+								text: 'Report this ad',
+							},
+							privacySettings: {
+								text: 'Privacy',
+								
+							}
+						}
+					});
+				});
+			</script>	</div>
+</aside>
+		</div>
+	</div>
+</section>
+<footer class="site-footer row" role="contentinfo">
+	<div class="container">
+				<p>
+			<a href="https://wordpress.com/?ref=footer_website" rel="nofollow">Create a free website or blog at WordPress.com.</a>
+					</p>
+		<p>
+			<a class="wordpress-link" href="http://eventbrite.com/l/wordpress?ref=wpfooter">We teamed up with Eventbrite</a>
+		</p>
+	</div>
+</footer>
+<!--  -->
+<script src="./ThreadLocal Example with Java 8 « IT Experts_files/gprofiles.js" id="grofiles-cards-js"></script>
+<script id="wpgroho-js-extra">
+var WPGroHo = {"my_hash":""};
+</script>
+<script type="text/javascript" src="./ThreadLocal Example with Java 8 « IT Experts_files/wpgroho.js"></script>
+
+	<script>
+		// Initialize and attach hovercards to all gravatars
+		( function() {
+			function init() {
+				if ( typeof Gravatar === 'undefined' ) {
+					return;
+				}
+
+				if ( typeof Gravatar.init !== 'function' ) {
+					return;
+				}
+
+				Gravatar.profile_cb = function ( hash, id ) {
+					WPGroHo.syncProfileData( hash, id );
+				};
+
+				Gravatar.my_hash = WPGroHo.my_hash;
+				Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+			}
+
+			if ( document.readyState !== 'loading' ) {
+				init();
+			} else {
+				document.addEventListener( 'DOMContentLoaded', init );
+			}
+		} )();
+	</script>
+
+		<div style="display:none">
+	</div>
+<script id="highlander-comments-js-extra">
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"https:\/\/itexpertsconsultant.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/itexpertsconsultant.wordpress.com\/wp-login.php?action=logout&_wpnonce=d24b51e4aa","homeURL":"https:\/\/itexpertsconsultant.wordpress.com\/","postID":"1607","gravDefault":"identicon","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"0","userIsLoggedIn":"","isJetpack":"","text_direction":"ltr"};
+</script>
+<script type="text/javascript" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(5)"></script>
+		<!-- CCPA [start] -->
+		<script type="text/javascript">
+			( function () {
+
+				var setupPrivacy = function() {
+
+					document.addEventListener( 'DOMContentLoaded', function() {
+
+						// Minimal Mozilla Cookie library
+						// https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie/Simple_document.cookie_framework
+						var cookieLib = window.cookieLib = {getItem:function(e){return e&&decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*"+encodeURIComponent(e).replace(/[\-\.\+\*]/g,"\\$&")+"\\s*\\=\\s*([^;]*).*$)|^.*$"),"$1"))||null},setItem:function(e,o,n,t,r,i){if(!e||/^(?:expires|max\-age|path|domain|secure)$/i.test(e))return!1;var c="";if(n)switch(n.constructor){case Number:c=n===1/0?"; expires=Fri, 31 Dec 9999 23:59:59 GMT":"; max-age="+n;break;case String:c="; expires="+n;break;case Date:c="; expires="+n.toUTCString()}return"rootDomain"!==r&&".rootDomain"!==r||(r=(".rootDomain"===r?".":"")+document.location.hostname.split(".").slice(-2).join(".")),document.cookie=encodeURIComponent(e)+"="+encodeURIComponent(o)+c+(r?"; domain="+r:"")+(t?"; path="+t:"")+(i?"; secure":""),!0}};
+
+						var setDefaultOptInCookie = function() {
+							var value = '1YNN';
+							var domain = '.wordpress.com' === location.hostname.slice( -14 ) ? '.rootDomain' : location.hostname;
+							cookieLib.setItem( 'usprivacy', value, 365 * 24 * 60 * 60, '/', domain );
+						};
+
+						var setCcpaAppliesCookie = function( value ) {
+							var domain = '.wordpress.com' === location.hostname.slice( -14 ) ? '.rootDomain' : location.hostname;
+							cookieLib.setItem( 'ccpa_applies', value, 24 * 60 * 60, '/', domain );
+						}
+
+						var maybeCallDoNotSellCallback = function() {
+							if ( 'function' === typeof window.doNotSellCallback ) {
+								return window.doNotSellCallback();
+							}
+
+							return false;
+						}
+
+						var usprivacyCookie = cookieLib.getItem( 'usprivacy' );
+
+						if ( null !== usprivacyCookie ) {
+							maybeCallDoNotSellCallback();
+							return;
+						}
+
+						var ccpaCookie = cookieLib.getItem( 'ccpa_applies' );
+
+						if ( null === ccpaCookie ) {
+
+							var request = new XMLHttpRequest();
+							request.open( 'GET', 'https://public-api.wordpress.com/geo/', true );
+
+							request.onreadystatechange = function () {
+								if ( 4 === this.readyState ) {
+									if ( 200 === this.status ) {
+
+										var data = JSON.parse( this.response );
+										var ccpa_applies = data['region'] && data['region'].toLowerCase() === 'california';
+
+										setCcpaAppliesCookie( ccpa_applies );
+
+										if ( ccpa_applies ) {
+											if ( maybeCallDoNotSellCallback() ) {
+												setDefaultOptInCookie();
+											}
+										}
+									} else {
+										setCcpaAppliesCookie( true );
+										if ( maybeCallDoNotSellCallback() ) {
+											setDefaultOptInCookie();
+										}
+									}
+								}
+							};
+
+							request.send();
+						} else {
+							if ( ccpaCookie === 'true' ) {
+								if ( maybeCallDoNotSellCallback() ) {
+									setDefaultOptInCookie();
+								}
+							}
+						}
+					} );
+				};
+
+				if ( window.defQueue && defQueue.isLOHP && defQueue.isLOHP === 2020 ) {
+					defQueue.items.push( setupPrivacy );
+				} else {
+					setupPrivacy();
+				}
+
+			} )();
+		</script>
+
+		<!-- CCPA [end] -->
+					<script type="text/javascript">
+			( function( $ ) {
+				$( document.body ).on( 'post-load', function () {
+					if ( typeof __ATA.insertInlineAds === 'function' ) {
+						__ATA.insertInlineAds();
+					}
+				} );
+			} )( jQuery );
+			</script>
+<script>
+window.addEventListener( "load", function( event ) {
+	var link = document.createElement( "link" );
+	link.href = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.css?v=20201002";
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.head.appendChild( link );
+
+	var script = document.createElement( "script" );
+	script.src = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.js?v=20201002";
+	script.defer = true;
+	document.body.appendChild( script );
+} );
+</script>
+
+	
+	<div id="carousel-reblog-box">
+		<form action="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" name="carousel-reblog">
+			<label for="carousel-reblog-content" id="carousel-reblog-lblogcontent" class="screen-reader-text">Add your thoughts here... (optional)</label>
+			<textarea id="carousel-reblog-content" name="carousel-reblog-content" placeholder="Add your thoughts here... (optional)"></textarea>
+			<label for="carousel-reblog-to-blog-id" id="carousel-reblog-lblogid">Post to</label>
+			<select name="carousel-reblog-to-blog-id" id="carousel-reblog-to-blog-id">
+						</select>
+
+			<div class="submit">
+				<span class="canceltext"><a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#" class="cancel">Cancel</a></span>
+				<input type="submit" name="carousel-reblog-submit" class="button" id="carousel-reblog-submit" value="Reblog Post">
+				<input type="hidden" id="carousel-reblog-blog-id" value="91233490">
+				<input type="hidden" id="carousel-reblog-blog-url" value="https://itexpertsconsultant.wordpress.com">
+				<input type="hidden" id="carousel-reblog-blog-title" value="IT Experts">
+				<input type="hidden" id="carousel-reblog-post-url" value="">
+				<input type="hidden" id="carousel-reblog-post-title" value="">
+			</div>
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="1593e1b73e"><input type="hidden" name="_wp_http_referer" value="/2017/05/29/threadlocal-example-with-java-8/">		</form>
+
+		<div class="arrow"></div>
+	</div>
+
+		<div class="jp-carousel-wrap jp-carousel-transitions" itemscope="" itemtype="https://schema.org/ImageGallery" style="display: none;">
+			<div class="jp-carousel-overlay"></div>
+			<div class="jp-carousel"></div>
+			<div class="jp-carousel-fadeaway"></div>
+			<div class="jp-carousel-info">
+				<div class="jp-carousel-photo-info">
+					<h2 class="jp-carousel-caption" itemprop="caption description"></h2>
+				</div>
+				<div class="jp-carousel-info-columns">
+					<div class="jp-carousel-left-column-wrapper">
+						<div class="jp-carousel-titleanddesc"></div>
+						<!-- Intentional duplicate -->
+						<div class="jp-carousel-photo-info">
+							<h2 class="jp-carousel-caption" itemprop="caption description"></h2>
+						</div>
+													<div id="jp-carousel-comment-form-container">
+																											<form id="jp-carousel-comment-form">
+											<textarea name="comment" class="jp-carousel-comment-form-field jp-carousel-comment-form-textarea" id="jp-carousel-comment-form-comment-field" placeholder="Write a Comment..."></textarea>
+											<div id="jp-carousel-comment-form-submit-and-info-wrapper">
+												<div id="jp-carousel-comment-form-commenting-as">
+																											<fieldset>
+															<label for="email">Email (Required)</label>
+															<input type="text" name="email" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-email-field">
+														</fieldset>
+														<fieldset>
+															<label for="author">Name (Required)</label>
+															<input type="text" name="author" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-author-field">
+														</fieldset>
+														<fieldset>
+															<label for="url">Website</label>
+															<input type="text" name="url" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-url-field">
+														</fieldset>
+																									</div>
+												<input type="submit" name="submit" class="jp-carousel-comment-form-button" id="jp-carousel-comment-form-button-submit" value="Post Comment">
+												<span id="jp-carousel-comment-form-spinner">&nbsp;</span>
+												<div id="jp-carousel-comment-post-results"></div>
+											</div>
+										</form>
+																								</div>
+							<div class="jp-carousel-comments"></div>
+							<div id="jp-carousel-comments-loading">
+								<span>Loading Comments...</span>
+							</div>
+											</div>
+					<div class="jp-carousel-image-meta">
+						<div class="jp-carousel-buttons">
+														<a class="jp-carousel-commentlink" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/#">Comment</a>
+																				</div>
+						<ul class="jp-carousel-image-exif" style="display: none;"></ul>
+						<a class="jp-carousel-image-download" style="display: none;"></a>
+						<div class="jp-carousel-image-map" style="display: none;"></div>
+					</div>
+				</div>
+			</div>
+			<div class="jp-carousel-next-button" style="display: none;">
+				<span></span>
+			</div>
+			<div class="jp-carousel-previous-button" style="display: none;">
+				<span></span>
+			</div>
+			<div class="jp-carousel-close-hint"><span>×</span></div>
+		</div>
+
+		
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/itexpertsconsultant.wordpress.com\/2017\/05\/29\/threadlocal-example-with-java-8\/":1607};
+	</script>
+				<link rel="stylesheet" id="all-css-0-3" href="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(6)" type="text/css" media="all">
+<script id="comment-like-js-extra">
+var comment_like_text = {"loading":"Loading..."};
+</script>
+<script id="jetpack-facebook-embed-js-extra">
+var jpfbembed = {"appid":"249643311490","locale":"en_US"};
+</script>
+<script id="jetpack-carousel-js-extra">
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/itexpertsconsultant.wordpress.com\/wp-admin\/admin-ajax.php","nonce":"ca19b1fad2","display_exif":"1","display_comments":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/itexpertsconsultant.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F","blog_id":"91233490","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"reblog":"Reblog","reblogged":"Reblogged","reblog_add_thoughts":"Add your thoughts here... (optional)","reblogging":"Reblogging...","post_reblog":"Post Reblog","stats_query_args":"blog=91233490&v=wpcom&tz=0&user_id=0&subd=itexpertsconsultant","is_public":"1","reblog_enabled":""};
+</script>
+<script id="sharing-js-js-extra">
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+</script>
+<script async="true" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(7)"></script><script type="text/javascript" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(8)"></script><div class="widget widget_eu_cookie_law_widget" style="display: block;">
+<div class="hide-on-button ads-active" data-hide-timeout="30" data-consent-expiration="180" id="eu-cookie-law">
+	<form method="post">
+		<input type="submit" value="Close and accept" class="accept">
+
+		Privacy &amp; Cookies: This site uses cookies. By continuing to use this website, you agree to their use. <br>
+To find out more, including how to control cookies, see here:
+				<a href="https://automattic.com/cookies" rel="nofollow">
+			Cookie Policy		</a>
+ </form>
+</div>
+</div><div id="fb-root"></div>
+<script type="text/javascript">
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-twitter' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-twitter' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+						return false;
+					}
+				} );
+			} )();
+var windowOpen;
+			( function () {
+				function matches( el, sel ) {
+					return !! (
+						el.matches && el.matches( sel ) ||
+						el.msMatchesSelector && el.msMatchesSelector( sel )
+					);
+				}
+
+				document.body.addEventListener( 'click', function ( event ) {
+					if ( ! event.target ) {
+						return;
+					}
+
+					var el;
+					if ( matches( event.target, 'a.share-facebook' ) ) {
+						el = event.target;
+					} else if ( event.target.parentNode && matches( event.target.parentNode, 'a.share-facebook' ) ) {
+						el = event.target.parentNode;
+					}
+
+					if ( el ) {
+						event.preventDefault();
+
+						// If there's another sharing window open, close it.
+						if ( typeof windowOpen !== 'undefined' ) {
+							windowOpen.close();
+						}
+						windowOpen = window.open( el.getAttribute( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+						return false;
+					}
+				} );
+			} )();
+</script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>		<iframe src="./ThreadLocal Example with Java 8 « IT Experts_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+		<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+<script src="./ThreadLocal Example with Java 8 « IT Experts_files/w.js" defer=""></script> <script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'91233490','blog_tz':'0','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'91233490','v':'wpcom','tz':'0','user_id':'0','post':'1607','subd':'itexpertsconsultant'}]);
+_stq.push(['extra', {'crypt':'UE5XaGUuOTlwaD85flAmcm1mcmZsaDhkV11YdWtpP0NsWnVkPS9sL0ViLndld3BuVT01Unp2dX5PUDJ1Ynp+SGwxcndhRi1Oc21bW1FIZ0EmNmp0JkFaSHQ0RGRsWXFITU5SMG1qNSxVRm9NK1R6MkNuUXNRXUw5MFIxeHk1SnB5ZWFnUCZDRU9VQ1QlSnx2bTNsT2Q/RldPdy4td0tib3pmYjc2SD9LeXN2b35oTHRbUUFjWnJkYiY0RzhtaVRTbls1dHEwQz18Qi11RC1QP0MlQmFbXW1ENGo2MVNMQUU/JXomW2U0bkFkLUE5UmhDRzFOcn4vY2dLUGJLZ2I9MV9OWVlUP2I9Y2U4L2liVHByNHJrdC1tQj89RVJ+b1J8TSwsenZlVUZzfCs/bncrMWI5cVU4TXVjYUkmP0dWLDMlc2N8PT0rWzV6QUtPTV1EWUVEbEZkbjA0TV0='}]);
+_stq.push([ 'clickTrackerInit', '91233490', '1607' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:1px;width:1px;overflow:hidden;position:absolute;bottom:1px;" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+
+<div class="comment-likes-overlay" style="display: none;"></div><iframe style="display: none" src="./ThreadLocal Example with Java 8 « IT Experts_files/multi-sync(1).html"></iframe><iframe style="display: none" src="./ThreadLocal Example with Java 8 « IT Experts_files/us.html"></iframe><iframe style="display: none" src="./ThreadLocal Example with Java 8 « IT Experts_files/user_sync.html"></iframe><iframe style="display: none" src="./ThreadLocal Example with Java 8 « IT Experts_files/um.html"></iframe><iframe style="display: none" src="./ThreadLocal Example with Java 8 « IT Experts_files/occ.html"></iframe><iframe style="display: none" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(14).html"></iframe><div class="bottom-sticky__ad-container bottom-sticky__ad-container_hidden" id="bottom-sticky__ad-container" style="">
+            <div class="bottom-sticky__ad-close-btn"></div>
+            <div id="bottom-sticky-ad" style="margin:0 auto;width:728px;"><div style="height:90px;margin:0;overflow:hidden;padding:0;position:relative;width:728px;" class="ata-frame-wrapper">
+            <div class="user-feedback" style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#f1f1f1;white-space:nowrap;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:12px;box-shadow:0px 1px 2px 0px inset #999;margin:0;display:none;table-layout:fixed;letter-spacing:0.2px;z-index:5000;padding:0;">
+                <div style="color:#808080;font-size:10px;line-height:10px;text-align:center;margin:0;padding:0;position:absolute;top:4px;width:100%;">Powered by wordads.co</div>
+                <div style="box-sizing:border-box;padding:5px;text-align:center;display:table-cell;vertical-align:middle;margin:0;width:100%;">
+                    <div style="color:#404040;margin:8px 0 0 0;white-space:normal;display:none;text-align:center;padding:0;line-height:12px;" class="user-feedback__thank-message">
+                        <div style="font-weight:bold;text-align:center;line-height:12px;">We've received your report.</div>
+                        <br>
+                        Thanks for your feedback!
+                    </div>
+                    <a class="user-feedback__reason" data-reason-id="1" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:8px;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Seen too often</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="2" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:8px;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Not relevant</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="3" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:8px;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Offensive</span>
+                </div>
+            </a><a class="user-feedback__reason" data-reason-id="4" style="border-radius:2px;position:relative;overflow:hidden;display:inline-block;padding:1px 5px;width:95px;height:40px;border:none;background-color:#FFFFFF;cursor:pointer;box-sizing:border-box;margin:8px auto 0;color:#404040;font-weight:normal;text-decoration:none;margin-left:8px;;">
+                <div style="width:100%;height:100%;display:table;text-align:center;margin:0;padding:0;">
+                    <span style="vertical-align:middle;display:table-cell;text-align:center;line-height:14px;white-space:normal;margin:0;padding:0;">Broken</span>
+                </div>
+            </a>
+                </div>
+                
+            </div>
+        
+                <iframe frameborder="0" height="90" scrolling="no" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(15).html" style="border:none;height:90px;margin:0;overflow:hidden;width:728px;" width="728"></iframe>
+            </div><div id="bottom-sticky-ad__controls" class="ata-controls" style="height:10px;line-height:10px;margin:0;padding:0;text-align:right;width:728px;"><span id="bottom-sticky-ad__complain-btn" class="ata-controls__complain-btn" style="color:#c8c7cc;cursor:pointer;font-family:Verdana, sans-serif;font-size:6px;letter-spacing:0.3px;text-transform:uppercase;vertical-align:middle;float:right;">Report this ad</span></div></div>
+        </div><style>.bottom-sticky__ad-container {
+    background: #f1f1f1;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translate(0,0);
+    transition: transform .2s ease-in-out;
+    user-select: none;
+    padding-top: 10px;
+    z-index: 49999;         /* AUTOMATTIC-2205 - because cookie consent banner has 50000 z-index */
+}
+.bottom-sticky__ad-container_hidden {
+    visibility: hidden;
+    transform: translate(0,1000px);
+}
+.bottom-sticky__ad-close-btn {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    box-sizing: content-box;
+    border: 2px solid #9d9d9d;
+    right: 2px;
+    top: -14px;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    background-size: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-width='4' stroke='%239d9d9d' d='M0 0l24 24M0 24L24 0'/%3E%3C/svg%3E");
+}
+.bottom-sticky__ad-container .adtags-button {
+    color: #000;
+}</style><style>.ata-controls__complain-btn:hover,
+.ata-controls__privacy-btn:hover {
+    color: #666666 !important;
+}
+.ata-controls__complain-btn:active,
+.ata-controls__privacy-btn:active {
+    color: #5ac8fa !important;
+}
+.ata-controls__complain-btn_clicked,
+.ata-controls__complain-btn_clicked:hover,
+.ata-controls__complain-btn_clicked:active {
+    color: #000 !important;
+    cursor: default !important;
+}
+.ata-frame-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><script src="./ThreadLocal Example with Java 8 « IT Experts_files/725X1342.skimlinks.js"></script><script src="./ThreadLocal Example with Java 8 « IT Experts_files/actionbar.js" defer=""></script><iframe src="./ThreadLocal Example with Java 8 « IT Experts_files/syncframe.html" id="criteo-syncframe" style="display: none;"></iframe><div id="actionbar" class="actnbr-pub-eventbrite-venue actnbr-has-follow"><ul><li class="actnbr-btn actnbr-hidden"> 				<a class="actnbr-action actnbr-actn-follow" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/"><svg class="gridicon gridicon__follow" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 16v2h-3v3h-2v-3h-3v-2h3v-3h2v3h3zM20 2v9h-4v3h-3v4H4c-1.1 0-2-.9-2-2V2h18zM8 13v-1H4v1h4zm3-3H4v1h7v-1zm0-2H4v1h7V8zm7-4H4v2h14V4z"></path></g></svg><span>Follow</span></a><a class="actnbr-action actnbr-actn-following no-display" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/"><svg class="gridicon gridicon__following" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 13.482L15.508 21 12 17.4l1.412-1.388 2.106 2.188 6.094-6.094L23 13.482zm-7.455 1.862L20 10.89V2H2v14c0 1.1.9 2 2 2h4.538l4.913-4.832 2.095 2.176zM8 13H4v-1h4v1zm3-2H4v-1h7v1zm0-2H4V8h7v1zm7-3H4V4h14v2z"></path></g></svg><span>Following</span></a> 				<div class="actnbr-popover tip tip-top-left actnbr-notice"> 					<div class="tip-arrow"></div> 					<div class="tip-inner actnbr-follow-bubble"> 				<ul> 					<li class="actnbr-sitename actnbr-hidden"><a href="http://itexpertsconsultant.wordpress.com/"><img alt="" src="./ThreadLocal Example with Java 8 « IT Experts_files/wpcom-gray-white.png" class="avatar avatar-50" height="50" width="50" scale="0"> IT Experts</a></li> 					<form> 					<li class="actnbr-login-nudge actnbr-hidden"><div>Already have a <span class="skimlinks-unlinked">WordPress.com</span> account? <a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F&amp;signup_flow=account">Log in now.</a></div></li> 				</form></ul> 			</div> 				</div> 					</li><li class="actnbr-ellipsis actnbr-hidden"> 				<svg class="gridicon gridicon__ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle></g></svg> 				<div class="actnbr-popover tip tip-top-left actnbr-more"> 				<div class="tip-arrow"></div> 				<div class="tip-inner"> 					<ul> 						<li class="actnbr-sitename actnbr-hidden"><a href="http://itexpertsconsultant.wordpress.com/"><img alt="" src="./ThreadLocal Example with Java 8 « IT Experts_files/wpcom-gray-white.png" class="avatar avatar-50" height="50" width="50" scale="0"> IT Experts</a></li> 					<li class="actnbr-folded-customize actnbr-hidden"><a href="https://itexpertsconsultant.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F"><svg class="gridicon gridicon__customize" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z" data-reactid=".2.1.1:0.1b.0"></path></g></svg><span>Customize<span></span></span></a></li> 						<li class="actnbr-folded-follow actnbr-hidden"><a class="actnbr-action actnbr-actn-follow" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/"><svg class="gridicon gridicon__follow" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 16v2h-3v3h-2v-3h-3v-2h3v-3h2v3h3zM20 2v9h-4v3h-3v4H4c-1.1 0-2-.9-2-2V2h18zM8 13v-1H4v1h4zm3-3H4v1h7v-1zm0-2H4v1h7V8zm7-4H4v2h14V4z"></path></g></svg><span>Follow</span></a><a class="actnbr-action actnbr-actn-following no-display" href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/"><svg class="gridicon gridicon__following" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 13.482L15.508 21 12 17.4l1.412-1.388 2.106 2.188 6.094-6.094L23 13.482zm-7.455 1.862L20 10.89V2H2v14c0 1.1.9 2 2 2h4.538l4.913-4.832 2.095 2.176zM8 13H4v-1h4v1zm3-2H4v-1h7v1zm0-2H4V8h7v1zm7-3H4V4h14v2z"></path></g></svg><span>Following</span></a></li> 					<li class="actnbr-signup actnbr-hidden"><a href="https://wordpress.com/start/">Sign up</a></li> 						<li class="actnbr-login actnbr-hidden"><a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fitexpertsconsultant.wordpress.com%2F2017%2F05%2F29%2Fthreadlocal-example-with-java-8%2F&amp;signup_flow=account">Log in</a></li> 						 						<li class="actnbr-shortlink actnbr-hidden"><a href="https://wp.me/p6aNZU-pV">Copy shortlink</a></li> 						<li class="flb-report actnbr-hidden"><a href="http://en.wordpress.com/abuse/">Report this content</a></li> 						 						 						<li class="actnbr-subs actnbr-hidden"><a href="https://subscribe.wordpress.com/">Manage subscriptions</a></li> 						<li class="actnbr-fold actnbr-hidden"><a href="https://itexpertsconsultant.wordpress.com/2017/05/29/threadlocal-example-with-java-8/">Collapse this bar</a></li> 						</ul> 					</div> 					</div> 				</li> 				</ul></div><iframe id="skimlinks-pixels-iframe" width="0" height="0" style="display: none;" src="./ThreadLocal Example with Java 8 « IT Experts_files/saved_resource(16).html"></iframe><img src="./ThreadLocal Example with Java 8 « IT Experts_files/g.gif" alt=":)" id="wpstats" scale="0"><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style><style>.user-feedback__reason:hover {
+    color: #000 !important;
+}
+.user-feedback__slider:hover {
+    background-color: rgba(0,0,0,0.6) !important;
+    border: none !important;
+}</style></body></html>
