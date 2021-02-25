@@ -1,0 +1,48 @@
+
+var ftGUID_5344387="47800195BBEFD1";
+var ftConfID_5344387="23841192";
+var ftParams_5344387="ftOBA=1&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fwww.baeldung.com%2Fslf4j-with-log4j2-logback&gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&us_privacy=${US_PRIVACY}&cachebuster=795923.6910729224&ft_keyword=SB_US&ft_section=%5BPUBLISHER%20AUCTION%20MACRO%5D";
+var ftKeyword_5344387="sb_us";
+var ftCustom_5344387="";
+var ftSection_5344387="[PUBLISHER AUCTION MACRO]";
+var ftSegment_5344387="afww,w2c,aanx,afxp,aevh,afti,af42";
+var ftSegmentList_5344387=[{s:'afww'},{s:'w2c'},{s:'aanx',t:47890000},{s:'afxp'},{s:'aevh'},{s:'afti'},{s:'af42'}];
+var ftRuleMatch_5344387="00010000";
+var ftTimestamp_5344387="1614275028";
+var ftGeoC2_5344387="us";
+var ftGeoState_5344387="il";
+var ftGeoCity_5344387="chicago";
+var ftISP_5344387="att internet services";
+var ftSpeed_5344387="xdsl";
+var ftDMA_5344387="602";
+var ftLong_5344387="-87.64";
+var ftLat_5344387="41.88";
+var ftPostal_5344387="60661";
+var ftTimeZone_5344387="-600";
+var ftMobileCarrier_5344387="";
+var ftImp5344387 = {};
+ftImp5344387.privacy = "x";
+ftImp5344387.guidAge = "24";
+ftImp5344387.impID = "FCF815A5-2B35-D54B-5874-EDF10EA7E400";
+ftImp5344387.duid = "FT:47800195BBEFD1";
+
+ftImp5344387.ft_tpplid = "";
+ftImp5344387.ft_c = {};
+ftImp5344387.gdpr = "!!GDPR!";
+ftImp5344387.gdpr_consent = "!!GDPR_CONSENT_78!";
+ftImp5344387.gdpr_pd = "";
+ftImp5344387.oob_consent = "0";
+ftImp5344387.gdprStoredConsent = "";
+ftImp5344387.us_privacy = "!!US_PRIVACY!";
+
+ftImp5344387.jsAppend = "1";
+(function(){
+    var tag = document.getElementById('ft_servedby_5344387') || (function(s){
+    	return s[s.length-1];
+    }(document.getElementsByTagName('script'))),
+           js = document.createElement('script');
+    js.src = 
+"https://cdn.flashtalking.com/xre/534/5344387/2962128/js/j-5344387-2962128.js";
+    js.id = "ftscript_m5344387";
+    tag.parentNode.insertBefore(js, tag);
+}());

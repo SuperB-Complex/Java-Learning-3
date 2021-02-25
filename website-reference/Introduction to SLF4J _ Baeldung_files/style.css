@@ -1,0 +1,117 @@
+@charset "UTF-8";
+.banner {
+  border: 1px solid #000;
+  background: #12395b;
+  overflow: hidden;
+  display: block !important;
+}
+
+#btnExit {
+  cursor: pointer;
+  opacity: 0;
+}
+
+.bannerSize {
+  width: 300px;
+  height: 250px;
+}
+
+.hide {
+  opacity: 0;
+}
+#truck{
+  top: 67px;
+  left: -99px;
+  width: 90px;
+  height: 77px;
+  background: url("truck.svg");
+}
+#home{
+  top: 74px;
+  left: -177px;
+  width: 170px;
+  height: 68px;
+  background: url("home.svg");
+}
+#copy01 {
+  top: 164px;
+  left: 100px;
+  width: 94px;
+  height: 24px;
+  background: url("copy01.svg");
+  opacity:0;
+}
+#copy02 {
+  top: 190px;
+  left: 67px;
+  width: 164px;
+  height: 24px;
+  background: url("copy02.svg");
+  opacity:0;
+}
+#copy03 {
+  top: 165px;
+  left: 25px;
+  width: 248px;
+  height: 50px;
+  background: url("copy03.svg");
+  opacity:0;
+}
+#copy04 {
+  top: 165px;
+  left: 87px;
+  width: 124px;
+  height: 24px;
+  background: url("copy04.svg");
+  opacity:0;
+}
+#copy05 {
+  top: 114px;
+  left: 62px;
+  width: 174px;
+  height: 52px;
+  background: url("copy_EF01.svg");
+  opacity:0;
+}
+#yellowLine{
+  top: -4px;
+  left: 40px;
+  width: 219px;
+  height: 12px;
+  background-color: #fac705;
+}
+#copy_eyebrow{
+  top: 15px;
+  left: 39px;
+  width: 219px;
+  height: 14px;
+  background: url(copy_eyebrow.svg);
+}
+#cta{
+  top: 189px;
+  left: 81px;
+  width: 135px;
+  height: 30px;
+  background-color: #fac705;
+  overflow: hidden;
+  opacity: 0;
+}
+#cta_copy{
+  top: 6px;
+  left: 11px;
+  width: 114px;
+  height: 18px;
+  background: url(copy_cta.svg) no-repeat;
+}
+
+#logo02 {
+  top: 26px;
+  left: 117px;
+  background: url(logo.svg);
+  width: 70px;
+  height: 74px;
+  -moz-transform: scale(5);
+  -webkit-transform: scale(5);
+  transform: scale(5);
+  opacity:0;
+}

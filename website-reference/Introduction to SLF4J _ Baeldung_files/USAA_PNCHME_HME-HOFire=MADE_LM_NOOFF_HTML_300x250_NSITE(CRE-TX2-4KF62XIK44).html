@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!-- saved from url=(0198)https://s0.2mdn.net/6301032/1607601218645/USAA_PNCHME_HME-HOFire=MADE_LM_NOOFF_HTML_300x250_NSITE(CRE-TX2-4KF62XIK44)/USAA_PNCHME_HME-HOFire=MADE_LM_NOOFF_HTML_300x250_NSITE(CRE-TX2-4KF62XIK44).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<title>USAA_PNCHME_HME-HOFire=MADE_LM_NOOFF_HTML_300x250_NSITE(CRE-TX2-4KF62XIK44)</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="ad.size" content="width=300,height=250">
+        <style>
+            * { margin:0;padding:0;box-sizing:border-box;}
+            div {position:absolute;background-repeat:no-repeat !important;}
+            #loader{width:100%;height:100%;}
+        </style>
+        <script type="text/javascript"> var clickTag=""; </script>
+    <script type="text/javascript">
+    
+  (function() {
+    var MAX_URL_PARAM_LENGTH = 34;
+    var CLICK_X_URL_KEY = 'nx';
+    var CLICK_Y_URL_KEY = 'ny';
+    var CREATIVE_DIMENSIONS_KEY = 'dim';
+    var AD_URL_PARAM = '&adurl=';
+
+    var relegateNavigation = '';
+    var urlParamMap = {};
+
+    urlParamMap[CLICK_X_URL_KEY] = null;
+    urlParamMap[CLICK_Y_URL_KEY] = null;
+    urlParamMap[CREATIVE_DIMENSIONS_KEY] = null;
+
+    var handleClickTagMessage = function(e) {
+      try {
+        var eventData = JSON.parse(e.data);
+      } catch (err) {
+        return;
+      }
+      if (eventData.isInitClickTag) {
+        if (eventData.clickTags) {
+          for (var i = 0; i < eventData.clickTags.length; i++) {
+            var clkTag = eventData.clickTags[i];
+            window[clkTag.name] = clkTag.url;
+          }
+        } else if (eventData.clickTag) {
+          window.clickTag = eventData.clickTag;
+        }
+        relegateNavigation = eventData.relegateNavigation;
+      }
+    };
+
+    var storeClickCoordinates = function(e) {
+      urlParamMap[CLICK_X_URL_KEY] = Math.round(e.clientX);
+      urlParamMap[CLICK_Y_URL_KEY] = Math.round(e.clientY);
+    };
+
+    var getCreativeDimensions = function() {
+      return window.innerWidth + 'x' + window.innerHeight;
+    }
+
+    var getExitClickParams = function(e) {
+      urlParamMap[CREATIVE_DIMENSIONS_KEY] = getCreativeDimensions();
+
+      var exitParams = '';
+      for (var key in urlParamMap) {
+        exitParams += '&' + key + '=';
+        if (urlParamMap[key] !== null) {
+          exitParams += urlParamMap[key];
+        }
+      }
+      return exitParams;
+    }
+
+    var appendExitClickParams = function(url) {
+      var adUrlIndex = url.toLowerCase().indexOf(AD_URL_PARAM);
+      var paramsToBeAdded = getExitClickParams();
+      if (adUrlIndex > -1 && paramsToBeAdded.length <= MAX_URL_PARAM_LENGTH) {
+        url = url.substr(0, adUrlIndex) + paramsToBeAdded +
+          url.substr(adUrlIndex);
+      };
+      return url;
+    };
+
+    if (open.call) {
+      window.open = function(open) {
+        return function(url, name, features) {
+          url = appendExitClickParams(url);
+          if (relegateNavigation === 'parent') {
+            var message = {'clickTag': url, 'isPostClickTag': true};
+            parent.postMessage(JSON.stringify(message), '*');
+          } else {
+            var args = [url, name];
+            if (features) {
+              args.push(features);
+            }
+            open.apply(window, args);
+          }
+        };
+      }(window.open);
+    }
+
+    if (window.addEventListener) {
+      window.addEventListener(
+          'message', handleClickTagMessage, false);
+      window.addEventListener('mousedown', storeClickCoordinates, true);
+    } else {
+      window.attachEvent('onmessage', handleClickTagMessage);
+    }
+  })();
+    
+  </script><link rel="stylesheet" type="text/css" href="./style(1).css"><script type="text/javascript" src="./gsap_3.0.1_min.js"></script><script type="text/javascript" src="./DrawSVGPlugin.min.js"></script></head>
+
+    <body data-new-gr-c-s-check-loaded="14.997.0" data-gr-ext-installed="">
+        <div id="loader"></div>
+        <div class="banner bannerSize" style="display: none; opacity: 1;">
+
+
+            <div id="house" class="retina f-01" style="transform: translate(-350px, 0px);"></div>
+            <div id="shadow_f1" class="f-01 copy1" style="opacity: 1; transform: translate(-350px, 0px);"></div>
+            <div id="shadow_f1_1" class="f-01" style="opacity: 1; transform: translate(-350px, 0px);"></div>
+            
+
+            <div id="checklist" class="retina f-01 f-03" style="transform: translate(-350px, 0px); opacity: 0;"></div> 
+            <div id="shadow_f2" style="opacity: 0;"></div>
+            <div id="shadow_f3" class="f-03" style="opacity: 0;"></div>
+
+            <div id="copy1" class="f-01 copy1" style="opacity: 1; transform: translate(-350px, 0px);"></div>
+            <div id="copy3" class="f-02" style="opacity: 0;"></div>
+            <div id="copy4" class="f-03" style="opacity: 0;"></div> 
+            <div id="copy_cont">
+                <div id="copy2" class="f-01" style="opacity: 1; transform: translate(-350px, 34px);"></div>
+            </div>
+            <div id="copy_cont2">
+                <div id="copy5" class="f-03" style="top: 2px; opacity: 0;"></div>
+            </div>
+            
+            <div id="copy_EF1" style="opacity: 1;"></div> 
+            <div id="copy_EF2" style="opacity: 1;"></div> 
+            <div id="usaa_logo" style="transform: translate(0px, 0px); opacity: 1;"></div> 
+            <div id="cta" style="opacity: 1;">
+                <div id="copy_cta" class="retina"></div>
+            </div>
+            <div id="copy_eyebrow"></div>
+            <div id="yellowline"></div>
+            
+        	<div id="btnExit" class="bannerSize"></div>
+    	</div>	
+
+    	<script type="text/javascript" src="./main(1).js"></script>
+        <script type="text/javascript">
+            var _btnExit = document.getElementById('btnExit');
+            _btnExit.addEventListener('click', clickTagHandler)
+            function clickTagHandler(){ window.open(window.clickTag);}
+        </script>
+	
+</body></html>
