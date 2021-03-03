@@ -1,0 +1,2803 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)https://www.cnblogs.com/duanxz/p/6759833.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta name="description" content="Java NIO中的Buffer用于和NIO通道进行交互。如你所知，数据是从通道读入缓冲区，从缓冲区写入到通道中的。交互图如下： 缓冲区本质上是一块可以写入数据，然后可以从中读取数据的内存。这块内存被">
+    <meta property="og:description" content="Java NIO中的Buffer用于和NIO通道进行交互。如你所知，数据是从通道读入缓冲区，从缓冲区写入到通道中的。交互图如下： 缓冲区本质上是一块可以写入数据，然后可以从中读取数据的内存。这块内存被">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Java NIO系列教程（五）Buffer - duanxz - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="https://common.cnblogs.com/favicon.svg" type="image/svg+xml">
+    
+    <link rel="stylesheet" href="./Buffer types_files/blog-common.min.css">
+    <link id="MainCss" rel="stylesheet" href="./Buffer types_files/bundle-sea.min.css">
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Buffer types_files/bundle-sea-mobile.min.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/duanxz/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/duanxz/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/duanxz/wlwmanifest.xml">
+    <script src="./Buffer types_files/osd.js"></script><script async="" src="./Buffer types_files/analytics.js"></script><script type="text/javascript" src="./Buffer types_files/encoder.js"></script><script>
+        var currentBlogId = 86007;
+        var currentBlogApp = 'duanxz';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'sea';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2017-04-24 11:51';
+        </script>
+    <script src="./Buffer types_files/jquery-2.2.0.min.js"></script>
+    <script src="./Buffer types_files/blog-common.min.js"></script><style type="text/css">.medium-zoom-overlay{position:fixed;top:0;right:0;bottom:0;left:0;opacity:0;transition:opacity .3s;will-change:opacity}.medium-zoom--opened .medium-zoom-overlay{cursor:pointer;cursor:zoom-out;opacity:1}.medium-zoom-image{cursor:pointer;cursor:zoom-in;transition:transform .3s cubic-bezier(.2,0,.2,1)!important}.medium-zoom-image--hidden{visibility:hidden}.medium-zoom-image--opened{position:relative;cursor:pointer;cursor:zoom-out;will-change:transform}</style>
+    
+    
+    
+<meta http-equiv="origin-trial" content="A+pvvGjoiNPDAn2JQFsT0CQbtlBZ8PLmAA4ReIHeP5mnOrPRuXf1nuQa1Dlu/MdwAmPuAC7cVDJLU1oBuOqMkQkAAAB5eyJvcmlnaW4iOiJodHRwczovL2dvb2dsZWFwaS5jb206NDQzIiwiZmVhdHVyZSI6IlRydXN0VG9rZW5zIiwiZXhwaXJ5IjoxNjI2MjIwNzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><meta http-equiv="origin-trial" content="A9ZgbRtm4pU3oZiuNzOsKcC8ppFSZdcjP2qYcdQrFKVzkmiWH1kdYY1Mi9x7G8+PS8HV9Ha9Cz0gaMdKsiVZIgMAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AxL6oBxcpn5rQDPKSAs+d0oxNyJYq2/4esBUh3Yx5z8QfcLu+AU8iFCXYRcr/CEEfDnkxxLTsvXPJFQBxHfvkgMAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXRhZ3NlcnZpY2VzLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A9KPtG5kl3oLTk21xqynDPGQ5t18bSOpwt0w6kGa6dEWbuwjpffmdUpR3W+faZDubGT+KIk2do0BX2ca16x8qAcAAACBeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MjYyMjA3OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A3HucHUo1oW9s+9kIKz8mLkbcmdaj5lxt3eiIMp1Nh49dkkBlg1Fhg4Fd/r0vL69mRRA36YutI9P/lJUfL8csQoAAACFeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiQ29udmVyc2lvbk1lYXN1cmVtZW50IiwiZXhwaXJ5IjoxNjI2MjIwNzk5LCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ=="><script src="./Buffer types_files/pubads_impl_2021022501.js" async=""></script><link rel="preload" href="./Buffer types_files/f.txt" as="script"><script type="text/javascript" src="./Buffer types_files/f.txt"></script><link rel="prefetch" href="https://2ff96c68ee3dce2d1fc5b3c33d536158.safeframe.googlesyndication.com/safeframe/1-0-37/html/container.html"><link rel="prefetch" href="https://tpc.googlesyndication.com/safeframe/1-0-37/html/container.html"></head>
+<body class="has-navbar" data-new-gr-c-s-check-loaded="14.997.0" data-gr-ext-installed="">
+    <a name="top"></a>
+            <div id="bannerbar" class="bannerbar-mobile formobile">
+                <a href="https://developer.aliyun.com/learning/trainingcamp/redis/1?utm_content=g_1000245176" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;aliyun-blog-mobile-banner&#39;)">
+                    <img src="./Buffer types_files/35695-20210228140227933-2125906102.jpg" alt="">
+                </a>
+            </div>
+    <div id="top_nav" class="navbar forpc">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding"><a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="./Buffer types_files/logo.svg" alt="博客园Logo"></a></li>
+                <li><a href="https://www.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-sitehome&#39;)">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-news&#39;)">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-q&#39;)">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-brands&#39;)">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-ing&#39;)">闪存</a></li>
+                <li><a href="https://edu.cnblogs.com/" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;skin-navbar-edu&#39;)">班级</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3">
+                        <button type="submit" id="zzk_search_button">
+                            <img src="./Buffer types_files/search.svg" alt="搜索">
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客" style="display: none;">
+                        <img id="myblog_icon" class="navbar-icon" src="./Buffer types_files/myblog.svg" alt="我的博客">
+                    </a>
+                    <a class="navbar-user-info navbar-blog" href="https://i.cnblogs.com/EditPosts.aspx?opt=1" alt="写随笔" title="写随笔" style="display: none;">
+                        <img id="new_post_icon" class="navbar-icon" src="./Buffer types_files/newpost.svg" alt="写随笔">
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息" style="display: none;">
+                        <img id="msg_icon" class="navbar-icon" src="./Buffer types_files/message.svg" alt="短消息">
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown" style="display: none;">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="./Buffer types_files/avatar-default.svg" alt="用户头像">
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/" style="display: inline;">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="login()" style="display: inline;">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    <!--done-->
+<div id="header">
+	
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/duanxz/">学无止境</a>
+<br>
+		
+	</div>
+</div>
+
+
+</div>
+
+<div id="mytopmenu">
+	
+		<div id="mylinks">
+<a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+ &nbsp;
+
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/duanxz/">
+首页</a>
+ &nbsp;
+
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+ &nbsp;
+
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/duanxz">
+联系</a> &nbsp;
+
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/duanxz/rss/">
+订阅</a>
+<a id="blog_nav_rss_image" href="https://www.cnblogs.com/duanxz/rss/">
+    <img src="./Buffer types_files/xml.gif" alt="订阅">
+</a>&nbsp;
+
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+
+
+</div>
+		<div id="mystats">随笔 -
+2089&nbsp;
+文章 -
+4&nbsp;
+评论 -
+285&nbsp;
+阅读 - 
+
+<span title="总阅读数: 7400279">
+740万</span>
+</div>
+	
+</div>
+<div id="centercontent">
+	<div id="post_detail">
+<div class="post">
+	<h1 class="postTitle">
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/duanxz/p/6759833.html">
+    <span>Java NIO系列教程（五）Buffer</span>
+    
+
+
+</a>
+</h1>
+	<div id="cnblogs_post_body" class="blogpost-body blogpost-body-html">
+<p>Java NIO中的Buffer用于和NIO通道进行交互。如你所知，数据是从通道读入缓冲区，从缓冲区写入到通道中的。交互图如下：</p>
+<p><img src="./Buffer types_files/285763-20180111105803254-1892505087.jpg" alt="" class="medium-zoom-image"></p>
+<p>缓冲区本质上是一块可以写入数据，然后可以从中读取数据的内存。这块内存被包装成NIO Buffer对象，并提供了一组方法，用来方便的访问该块内存。缓冲区实际上是一个容器对象，更直接的说，其实就是一个数组，在NIO库中，所有数据都是用缓冲区处理的。在读取数据时，它是直接读到缓冲区中的； 在写入数据时，它也是写入到缓冲区中的；任何时候访问 NIO 中的数据，都是将它放到缓冲区中。而在面向流I/O系统中，所有数据都是直接写入或者直接将数据读取到Stream对象中。</p>
+<p>在NIO中，所有的缓冲区类型都继承于抽象类Buffer，最常用的就是ByteBuffer，对于Java中的基本类型，基本都有一个具体Buffer类型与之相对应，它们之间的继承关系如下图所示：</p>
+<p><img src="./Buffer types_files/285763-20180111105809379-1117624030.png" alt="" class="medium-zoom-image"></p>
+<p>&nbsp;</p>
+<p>下面是NIO Buffer相关的话题列表：</p>
+<ol>
+<li><a href="http://ifeve.com/buffers/#basicusage">Buffer的基本用法</a></li>
+<li><a href="http://ifeve.com/buffers/#cap-pos-limit">Buffer的capacity,position和limit</a></li>
+<li><a href="http://ifeve.com/buffers/#buffertype">Buffer的类型</a></li>
+<li><a href="http://ifeve.com/buffers/#allocate">Buffer的分配</a></li>
+<li><a href="http://ifeve.com/buffers/#writetobuffer">向Buffer中写数据</a></li>
+<li><a href="http://ifeve.com/buffers/#flip">flip()方法</a></li>
+<li><a href="http://ifeve.com/buffers/#read">从Buffer中读取数据</a></li>
+<li><a href="http://ifeve.com/buffers/#clearandcompact">clear()与compact()方法</a></li>
+<li><a href="http://ifeve.com/buffers/#markandreset">mark()与reset()方法</a></li>
+<li><a href="http://ifeve.com/buffers/#equalsandcompareto">equals()与compareTo()方法</a></li>
+</ol>
+<p>&nbsp;</p>
+<h3 id="basicusage">Buffer的基本用法</h3>
+<p>使用Buffer读写数据一般遵循以下四个步骤：</p>
+<ol>
+<li>写入数据到Buffer</li>
+<li>调用<code>flip()</code>方法</li>
+<li>从Buffer中读取数据</li>
+<li>调用<code>clear()</code>方法或者<code>compact()</code>方法</li>
+</ol>
+<p>当向buffer写入数据时，buffer会记录下写了多少数据。一旦要读取数据，需要通过flip()方法将Buffer从写模式切换到读模式。在读模式下，可以读取之前写入到buffer的所有数据。</p>
+<p>一旦读完了所有的数据，就需要清空缓冲区，让它可以再次被写入。有两种方式能清空缓冲区：调用clear()或compact()方法。clear()方法会清空整个缓冲区。compact()方法只会清除已经读过的数据。任何未读的数据都被移到缓冲区的起始处，新写入的数据将放到缓冲区未读数据的后面。</p>
+<p>下面是一个使用Buffer的例子：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>RandomAccessFile aFile = <span style="color: rgba(0, 0, 255, 1)">new</span> RandomAccessFile("data/nio-data.txt", "rw"<span style="color: rgba(0, 0, 0, 1)">);
+    FileChannel inChannel </span>=<span style="color: rgba(0, 0, 0, 1)"> aFile.getChannel();
+     
+    </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)">create buffer with capacity of 48 bytes</span>
+    ByteBuffer buf = ByteBuffer.allocate(48<span style="color: rgba(0, 0, 0, 1)">);
+     
+    </span><span style="color: rgba(0, 0, 255, 1)">int</span> bytesRead = inChannel.read(buf); <span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)">read into buffer.</span>
+    <span style="color: rgba(0, 0, 255, 1)">while</span> (bytesRead != -1<span style="color: rgba(0, 0, 0, 1)">) {
+     
+      buf.flip();  </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)">make buffer ready for read</span>
+     
+      <span style="color: rgba(0, 0, 255, 1)">while</span><span style="color: rgba(0, 0, 0, 1)">(buf.hasRemaining()){
+          System.out.print((</span><span style="color: rgba(0, 0, 255, 1)">char</span>) buf.get()); <span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> read 1 byte at a time</span>
+<span style="color: rgba(0, 0, 0, 1)">      }
+     
+      buf.clear(); </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)">make buffer ready for writing</span>
+      bytesRead =<span style="color: rgba(0, 0, 0, 1)"> inChannel.read(buf);
+    }
+    aFile.close();</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div id="highlighter_517001" class="syntaxhighlighter  ">&nbsp;</div>
+<h3>示例2：</h3>
+<p>下面是一个简单的使用IntBuffer的例子：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: rgba(0, 0, 255, 1)">package</span><span style="color: rgba(0, 0, 0, 1)"> com.dxz.nio;
+
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> java.nio.IntBuffer;
+
+</span><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">class</span><span style="color: rgba(0, 0, 0, 1)"> TestIntBuffer {  
+    </span><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">static</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> main(String[] args) {  
+        </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> 分配新的int缓冲区，参数为缓冲区容量  
+        </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> 新缓冲区的当前位置将为零，其界限(限制位置)将为其容量。它将具有一个底层实现数组，其数组偏移量将为零。  </span>
+        IntBuffer buffer = IntBuffer.allocate(8<span style="color: rgba(0, 0, 0, 1)">);  
+  
+        </span><span style="color: rgba(0, 0, 255, 1)">for</span> (<span style="color: rgba(0, 0, 255, 1)">int</span> i = 0; i &lt; buffer.capacity(); ++<span style="color: rgba(0, 0, 0, 1)">i) {  
+            </span><span style="color: rgba(0, 0, 255, 1)">int</span> j = 2 * (i + 1<span style="color: rgba(0, 0, 0, 1)">); 
+            </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> 将给定整数写入此缓冲区的当前位置，当前位置递增  </span>
+<span style="color: rgba(0, 0, 0, 1)">            buffer.put(j);  
+        }  
+  
+        </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> 重设此缓冲区，将限制设置为当前位置，然后将当前位置设置为0  </span>
+<span style="color: rgba(0, 0, 0, 1)">        buffer.flip();  
+  
+        </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> 查看在当前位置和限制位置之间是否有元素  </span>
+        <span style="color: rgba(0, 0, 255, 1)">while</span><span style="color: rgba(0, 0, 0, 1)"> (buffer.hasRemaining()) {  
+            </span><span style="color: rgba(0, 128, 0, 1)">//</span><span style="color: rgba(0, 128, 0, 1)"> 读取此缓冲区当前位置的整数，然后当前位置递增  </span>
+            <span style="color: rgba(0, 0, 255, 1)">int</span> j =<span style="color: rgba(0, 0, 0, 1)"> buffer.get();  
+            System.out.print(j </span>+ "  "<span style="color: rgba(0, 0, 0, 1)">);  
+        }  
+  
+    }  
+  
+}  </span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>结果：</p>
+<div class="cnblogs_code">
+<pre>2  4  6  8  10  12  14  16  </pre>
+</div>
+<p>&nbsp;</p>
+<h3 id="cap-pos-limit">Buffer的capacity,position和limit</h3>
+<p>缓冲区本质上是一块可以写入数据，然后可以从中读取数据的内存。这块内存被包装成NIO Buffer对象，并提供了一组方法，用来方便的访问该块内存。</p>
+<p>为了理解Buffer的工作原理，需要熟悉它的三个属性：</p>
+<ul>
+<li>capacity</li>
+<li>position</li>
+<li>limit</li>
+</ul>
+<p>position和limit的含义取决于Buffer处在读模式还是写模式。不管Buffer处在什么模式，capacity的含义总是一样的。</p>
+<p>这里有一个关于capacity，position和limit在读写模式中的说明，详细的解释在插图后面。</p>
+<p><img src="./Buffer types_files/285763-20180111105817316-229038267.png" alt="" class="medium-zoom-image"></p>
+<h4 id="capacity">capacity</h4>
+<p>作为一个内存块，Buffer有一个固定的大小值，也叫“capacity”.你只能往里写capacity个byte、long，char等类型。一旦Buffer满了，需要将其清空（通过读数据或者清除数据）才能继续写数据往里写数据。</p>
+<h4 id="position">position</h4>
+<p>当你写数据到Buffer中时，position表示当前的位置。初始的position值为0.当一个byte、long等数据写到Buffer后， position会向前移动到下一个可插入数据的Buffer单元。position最大可为capacity – 1.</p>
+<p>当读取数据时，也是从某个特定位置读。当将Buffer从写模式切换到读模式，position会被重置为0. 当从Buffer的position处读取数据时，position向前移动到下一个可读的位置。</p>
+<h4 id="limit">limit</h4>
+<p>在写模式下，Buffer的limit表示你最多能往Buffer里写多少数据。 写模式下，limit等于Buffer的capacity。</p>
+<p>当切换Buffer到读模式时， limit表示你最多能读到多少数据。因此，当切换Buffer到读模式时，limit会被设置成写模式下的position值。换句话说，你能读到之前写入的所有数据（limit被设置成已写数据的数量，这个值在写模式下就是position）</p>
+<h3 id="buffertype">Buffer的类型</h3>
+<p>Java NIO 有以下Buffer类型</p>
+<ul>
+<li>ByteBuffer</li>
+<li>MappedByteBuffer</li>
+<li>CharBuffer</li>
+<li>DoubleBuffer</li>
+<li>FloatBuffer</li>
+<li>IntBuffer</li>
+<li>LongBuffer</li>
+<li>ShortBuffer</li>
+</ul>
+<p>p&lt;&gt;<br data-filtered="filtered">如你所见，这些Buffer类型代表了不同的数据类型。换句话说，就是可以通过char，short，int，long，float 或 double类型来操作缓冲区中的字节。</p>
+<p>MappedByteBuffer 有些特别，在涉及它的专门章节中再讲。</p>
+<h3 id="allocate">Buffer的分配</h3>
+<p>要想获得一个Buffer对象首先要进行分配。 每一个Buffer类都有一个allocate方法。下面是一个分配48字节capacity的ByteBuffer的例子。</p>
+<div id="highlighter_713688" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>1</code></td>
+<td class="content"><code class="plain">ByteBuffer buf = ByteBuffer.allocate(</code><code class="value">48</code><code class="plain">);</code></td>
+
+
+
+
+</tr>
+
+
+
+
+</tbody>
+
+
+
+
+</table>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+<p>这是分配一个可存储1024个字符的CharBuffer：</p>
+<div id="highlighter_866237" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>1</code></td>
+<td class="content"><code class="plain">CharBuffer buf = CharBuffer.allocate(</code><code class="value">1024</code><code class="plain">);</code></td>
+
+
+
+
+</tr>
+
+
+
+
+</tbody>
+
+
+
+
+</table>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+<h3 id="writetobuffer">向Buffer中写数据</h3>
+<p>写数据到Buffer有两种方式：</p>
+<ul>
+<li>从Channel写到Buffer。</li>
+<li>通过Buffer的put()方法写到Buffer里。</li>
+
+
+
+
+</ul>
+<p>从Channel写到Buffer的例子</p>
+<div id="highlighter_254668" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>1</code></td>
+<td class="content"><code class="keyword">int</code>&nbsp;<code class="plain">bytesRead = inChannel.read(buf);&nbsp;</code><code class="comments">//read into buffer.</code></td>
+
+
+
+
+</tr>
+
+
+
+
+</tbody>
+
+
+
+
+</table>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+<p>通过put方法写Buffer的例子：</p>
+<div id="highlighter_648690" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>1</code></td>
+<td class="content"><code class="plain">buf.put(</code><code class="value">127</code><code class="plain">);</code></td>
+
+
+
+
+</tr>
+
+
+
+
+</tbody>
+
+
+
+
+</table>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+</div>
+<p>put方法有很多版本，允许你以不同的方式把数据写入到Buffer中。例如， 写到一个指定的位置，或者把一个字节数组写入到Buffer。 更多Buffer实现的细节参考JavaDoc。</p>
+<h4 id="flip">flip()方法</h4>
+<div class="mcon f14 noi">
+<p>flip<span class="ml black f14 nor"><span class="green">英&nbsp;[flɪp]　<span class="green">美&nbsp;[flɪp]&nbsp;及物动词 轻弹，轻击; 按（开关）; 快速翻转; 急挥</span></span></span></p>
+
+
+
+
+</div>
+<p>flip方法将Buffer从<strong>写模式切换到读模式</strong>。调用flip()方法会将position设回0，并将limit设置成之前position的值。</p>
+<p>换句话说，position现在用于标记读的位置，limit表示之前写进了多少个byte、char等 —— 现在能读取多少个byte、char等。</p>
+<h3 id="read">从Buffer中读取数据</h3>
+<p>从Buffer中读取数据有两种方式：</p>
+<ol>
+<li>从Buffer读取数据到Channel。</li>
+<li>使用get()方法从Buffer中读取数据。</li>
+
+
+
+
+</ol>
+<p>从Buffer读取数据到Channel的例子：</p>
+<div id="highlighter_800043" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<div class="cnblogs_code">
+<pre>//read from buffer into channel.
+int bytesWritten = inChannel.write(buf);</pre>
+</div>
+</div>
+<div class="line alt2">&nbsp;</div>
+</div>
+</div>
+<p>使用get()方法从Buffer中读取数据的例子</p>
+<div id="highlighter_783720" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<div class="cnblogs_code">
+<pre>byte aByte = buf.get();</pre>
+</div>
+</div>
+</div>
+</div>
+<p>get方法有很多版本，允许你以不同的方式从Buffer中读取数据。例如，从指定position读取，或者从Buffer中读取数据到字节数组。更多Buffer实现的细节参考JavaDoc。</p>
+<h3 id="rewind">rewind()方法</h3>
+<p>Buffer.rewind()将position设回0，所以你可以重读Buffer中的所有数据。limit保持不变，仍然表示能从Buffer中读取多少个元素（byte、char等）。</p>
+<h3 id="clearandcompact">clear()与compact()方法</h3>
+<p>一旦读完Buffer中的数据，需要让Buffer准备好再次被写入。可以通过clear()或compact()方法来完成。</p>
+<p>如果调用的是clear()方法，position将被设回0，limit被设置成 capacity的值。换句话说，Buffer 被清空了。Buffer中的数据并未清除，只是这些标记告诉我们可以从哪里开始往Buffer里写数据。</p>
+<p>如果Buffer中有一些未读的数据，调用clear()方法，数据将“被遗忘”，意味着不再有任何标记会告诉你哪些数据被读过，哪些还没有。</p>
+<p>如果Buffer中仍有未读的数据，且后续还需要这些数据，但是此时想要先先写些数据，那么使用compact()方法。</p>
+<p>compact()方法将所有未读的数据拷贝到Buffer起始处。然后将position设到最后一个未读元素正后面。limit属性依然像clear()方法一样，设置成capacity。现在Buffer准备好写数据了，但是不会覆盖未读的数据。</p>
+<h3 id="markandreset">mark()与reset()方法</h3>
+<p>通过调用Buffer.mark()方法，可以标记Buffer中的一个特定position。之后可以通过调用Buffer.reset()方法恢复到这个position。例如：</p>
+<div id="highlighter_451275" class="syntaxhighlighter  ">
+<div class="lines">
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>1</code></td>
+<td class="content"><code class="plain">buffer.mark();</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="line alt2">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>2</code></td>
+<td class="content">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>3</code></td>
+<td class="content"><code class="comments">//call buffer.get() a couple of times, e.g. during parsing.</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="line alt2">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>4</code></td>
+<td class="content">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="line alt1">
+<table>
+<tbody>
+<tr>
+<td class="number"><code>5</code></td>
+<td class="content"><code class="plain">buffer.reset();&nbsp;&nbsp;</code><code class="comments">//set position back to mark.</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h3 id="equalsandcompareto">equals()与compareTo()方法</h3>
+<p>可以使用equals()和compareTo()方法两个Buffer。</p>
+<h4 id="equals">equals()</h4>
+<p>当满足下列条件时，表示两个Buffer相等：</p>
+<ol>
+<li>有相同的类型（byte、char、int等）。</li>
+<li>Buffer中剩余的byte、char等的个数相等。</li>
+<li>Buffer中所有剩余的byte、char等都相同。</li>
+</ol>
+<p>如你所见，equals只是比较Buffer的一部分，不是每一个在它里面的元素都比较。实际上，它只比较Buffer中的剩余元素。</p>
+<h4 id="compareto">compareTo()方法</h4>
+<p>compareTo()方法比较两个Buffer的剩余元素(byte、char等)， 如果满足下列条件，则认为一个Buffer“小于”另一个Buffer：</p>
+<ol><ol>
+<li>第一个不相等的元素小于另一个Buffer中对应的元素 。</li>
+<li>所有元素都相等，但第一个Buffer比另一个先耗尽(第一个Buffer的元素个数比另一个少)。</li>
+</ol></ol>
+<p align="left">&nbsp;</p>
+<p align="left"><strong>缓冲区分片</strong></p>
+<p align="left">　　在NIO中，除了可以分配或者包装一个缓冲区对象外，还可以根据现有的缓冲区对象来创建一个子缓冲区，即在现有缓冲区上切出一片来作为一个新的缓冲区，但现有的缓冲区与创建的子缓冲区在底层数组层面上是数据共享的，也就是说，子缓冲区相当于是现有缓冲区的一个视图窗口。调用slice()方法可以创建一个子缓冲区，让我们通过例子来看一下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>package com.dxz.nio;
+
+import java.nio.ByteBuffer;
+
+public class BufferDemo1 {
+    static public void main(String args[]) throws Exception {
+        ByteBuffer buffer = ByteBuffer.allocate(10);
+
+        // 缓冲区中的数据0-9
+        for (int i = 0; i &lt; buffer.capacity(); ++i) {
+            buffer.put((byte) i);
+        }
+
+        // 创建子缓冲区
+        buffer.position(3);
+        buffer.limit(7);
+        ByteBuffer slice = buffer.slice();
+
+        // 改变子缓冲区的内容
+        for (int i = 0; i &lt; slice.capacity(); ++i) {
+            byte b = slice.get(i);
+            b *= 10;
+            slice.put(i, b);
+        }
+
+        buffer.position(0);
+        buffer.limit(buffer.capacity());
+
+        while (buffer.remaining() &gt; 0) {
+            System.out.println(buffer.get());
+        }
+    }
+}</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>结果：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>0
+1
+2
+30
+40
+50
+60
+7
+8
+9</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p align="left"><strong>只读缓冲区</strong></p>
+<p>只读缓冲区非常简单，可以读取它们，但是不能向它们写入数据。可以通过调用缓冲区的asReadOnlyBuffer()方法，将任何常规缓冲区转 换为只读缓冲区，这个方法返回一个与原缓冲区完全相同的缓冲区，并与原缓冲区共享数据，只不过它是只读的。如果原缓冲区的内容发生了变化，只读缓冲区的内容也随之发生变化：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>package com.dxz.nio;
+
+import java.nio.ByteBuffer;
+
+public class BufferDemo2 {
+    static public void main(String args[]) throws Exception {
+        ByteBuffer buffer = ByteBuffer.allocate(10);
+
+        // 缓冲区中的数据0-9
+        for (int i = 0; i &lt; buffer.capacity(); ++i) {
+            buffer.put((byte) i);
+        }
+
+        // 创建只读缓冲区
+        ByteBuffer readonly = buffer.asReadOnlyBuffer();
+
+        // 改变原缓冲区的内容
+        for (int i = 0; i &lt; buffer.capacity(); ++i) {
+            byte b = buffer.get(i);
+            b *= 10;
+            buffer.put(i, b);
+        }
+
+        readonly.position(0);
+        readonly.limit(buffer.capacity());
+
+        // 只读缓冲区的内容也随之改变
+        while (readonly.remaining() &gt; 0) {
+            System.out.println(readonly.get());
+        }
+    }
+}</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p align="left">结果：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>0
+10
+20
+30
+40
+50
+60
+70
+80
+90</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>　　如果尝试修改只读缓冲区的内容，则会报ReadOnlyBufferException异常。只读缓冲区对于保护数据很有用。在将缓冲区传递给某个 对象的方法时，无法知道这个方法是否会修改缓冲区中的数据。创建一个只读的缓冲区可以保证该缓冲区不会被修改。只可以把常规缓冲区转换为只读缓冲区，而不能将只读的缓冲区转换为可写的缓冲区。</p>
+<p align="left"><strong>直接缓冲区（<span style="color: rgba(255, 0, 0, 1)"><strong>DirectByteBuffer堆外缓存</strong></span>）</strong></p>
+<p>　　直接缓冲区是为加快I/O速度，使用一种特殊方式为其分配内存的缓冲区，JDK文档中的描述为：给定一个直接字节缓冲区，Java虚拟机将尽最大努 力直接对它执行本机I/O操作。也就是说，它会在每一次调用底层操作系统的本机I/O操作之前(或之后)，尝试避免将缓冲区的内容拷贝到一个中间缓冲区中 或者从一个中间缓冲区中拷贝数据。要分配直接缓冲区，需要调用allocateDirect()方法，而不是allocate()方法，使用方式与普通缓冲区并无区别，如下面的拷贝文件示例：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>package com.dxz.nio;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.*;
+
+public class BufferDemo3 {
+    static public void main(String args[]) throws Exception {
+        String infile = "e:\\logs\\test.txt";
+        FileInputStream fin = new FileInputStream(infile);
+        FileChannel fcin = fin.getChannel();
+
+        String outfile = String.format("e:\\logs\\testcopy.txt");
+        FileOutputStream fout = new FileOutputStream(outfile);
+        FileChannel fcout = fout.getChannel();
+
+        // 使用allocateDirect，而不是allocate
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+
+        while (true) {
+            buffer.clear();
+            int r = fcin.read(buffer);
+            if (r == -1) {
+                break;
+            }
+            buffer.flip();
+            fcout.write(buffer);
+        }
+    }
+}</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p align="left"><strong>内存映射文件I/O</strong></p>
+<p>　　内存映射文件I/O是一种读和写文件数据的方法，它可以比常规的基于流或者基于通道的I/O快的多。内存映射文件I/O是通过使文件中的数据出现为 内存数组的内容来完成的，这其初听起来似乎不过就是将整个文件读到内存中，但是事实上并不是这样。一般来说，只有文件中实际读取或者写入的部分才会映射到内存中。如下面的示例代码：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>package com.dxz.nio;
+
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.*;
+
+public class BufferDemo4 {
+    static private final int start = 0;
+    static private final int size = 1024;
+
+    static public void main(String args[]) throws Exception {
+        RandomAccessFile raf = new RandomAccessFile("e:\\logs\\test.txt", "rw");
+        FileChannel fc = raf.getChannel();
+
+        MappedByteBuffer mbb = fc.map(FileChannel.MapMode.READ_WRITE, start, size);
+
+        mbb.put(0, (byte) 97);
+        mbb.put(1023, (byte) 122);
+
+        raf.close();
+    }
+}</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="javascript:void(0)"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Buffer types_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;参考：http://blog.csdn.net/wuxianglong/article/details/6612263</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block"><div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/duanxz/category/780658.html" target="_blank">网络编程</a>,             <a href="https://www.cnblogs.com/duanxz/category/538542.html" target="_blank">io</a>,             <a href="https://www.cnblogs.com/duanxz/category/490111.html" target="_blank">offheap</a></div>
+<div id="EntryTag">
+    标签: 
+            <a href="https://www.cnblogs.com/duanxz/tag/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>,             <a href="https://www.cnblogs.com/duanxz/tag/nio/">nio</a>,             <a href="https://www.cnblogs.com/duanxz/tag/io/">io</a>,             <a href="https://www.cnblogs.com/duanxz/tag/offheap/">offheap</a></div>
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6759833,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;380416fe-3256-e011-a53f-842b2b196315&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Buffer types_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Buffer types_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/duanxz/" target="_blank"><img src="./Buffer types_files/u285763.jpg" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/duanxz/">duanxz</a><br>
+            <a href="https://home.cnblogs.com/u/duanxz/followees/">关注 - 19</a><br>
+            <a href="https://home.cnblogs.com/u/duanxz/followers/">粉丝 - 1944</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;380416fe-3256-e011-a53f-842b2b196315&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6759833,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(6759833,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/duanxz/p/6759825.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/duanxz/p/6759825.html" title="发布于 2017-04-24 23:47">Java NIO系列教程（四） Scatter/Gather</a>
+    <br>
+    <a href="https://www.cnblogs.com/duanxz/p/6782783.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/duanxz/p/6782783.html" title="发布于 2017-04-28 18:08">Java NIO系列教程（六） 多路复用器Selector</a>
+
+</div>
+</div>
+	<div class="postDesc">posted on 
+<span id="post-date">2017-04-24 23:51</span>&nbsp;
+<a href="https://www.cnblogs.com/duanxz/">duanxz</a>&nbsp;
+阅读(<span id="post_view_count">978</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=6759833" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(6759833);return false;">收藏</a></div>
+</div>
+
+
+<script src="./Buffer types_files/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 86007, cb_blogApp = 'duanxz', cb_blogUserGuid = '380416fe-3256-e011-a53f-842b2b196315';
+    var cb_entryId = 6759833, cb_entryCreatedDate = '2017-04-24 23:51', cb_postType = 1;
+    updatePostStats(
+        [cb_entryId],
+        function(id, count) { $("#post_view_count").text(count) },
+        function(id, count) { $("#post_comment_count").text(count) })
+    zoomManager.apply("#cnblogs_post_body img:not(.code_img_closed):not(.code_img_opened)");
+</script>
+<a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/duanxz/p/6759833.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/duanxz/p/6759833.html#top">返回顶部</a></div>
+    <div id="comment_form_container" style="visibility: visible;"><div class="login_tips">
+    登录后才能发表评论，立即 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，
+    <a href="https://www.cnblogs.com/">访问</a> 网站首页
+</div>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="https://developer.aliyun.com/topic/haoyun?utm_content=g_1000241555" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-好云&#39;)">【推荐】开年迎好云，免费领最高6000元好云礼！15种权益祝你云气爆棚</a><br><a href="https://developer.aliyun.com/learning/trainingcamp/java/2?utm_content=g_1000245293" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-java2&#39;)">【推荐】阿里云Java训练营第二期--就5天，名师带你实战Spring Boot 2.5</a><br><a href="https://developer.aliyun.com/learning/trainingcamp/redis/1?utm_content=g_1000245176" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-redis&#39;)">【推荐】阿里云 Redis 社区核心成员带你七天深入 Redis 核心技术</a><br><a href="http://www.uccpsoft.com/index.htm" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-ucancode&#39;)">【推荐】大型组态、工控、仿真、CAD\GIS 50万行VC++源码免费下载!</a><br><a href="https://brands.cnblogs.com/huawei" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-华为专区&#39;)">【推荐】万物互联的时代，由你的代码定义，创建HarmonyOS应用</a><br><a href="https://www.cnblogs.com/cmt/p/14408628.html" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-AWS&#39;)">【求助】注册 Amazon Web Services(AWS) 账户，助园子一臂之力</a><br><a href="http://www.javamall.com.cn/" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-javashop&#39;)">【推荐】Javashop--基于SPRING BOOT架构的企业级电商系统</a><br></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="under-post-card">
+        <div id="div-gpt-ad-1592365906576-0" style="width: 300px; height: 250px;" data-google-query-id="CPCm7s-6k-8CFZAvAQods5sHzQ"><div id="google_ads_iframe_/1090369/C1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C1_0" title="3rd party ad content" name="google_ads_iframe_/1090369/C1_0" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" data-google-container-id="1" style="border: 0px; vertical-align: bottom;" data-load-complete="true" src="./Buffer types_files/saved_resource.html"></iframe></div></div>
+    </div>
+    <div id="under_post_card1"><div class="under-post-card"><b>AWS免费产品</b>：<br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/webapps/?trk=ba_a134p000006vc6OAAQ&amp;trkCampaign=webapps&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">如何在AWS上免费构建网站</a><br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/storage/?trk=ba_a134p000006vc7JAAQ&amp;trkCampaign=storage&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">AWS免费云存储解决方案</a><br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/database/?trk=ba_a134p000006vc7YAAQ&amp;trkCampaign=database&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">在AWS上免费构建数据库</a><br>· <a onclick="ga(&quot;send&quot;, &quot;event&quot;, &quot;Link&quot;, &quot;click&quot;, &quot;aws-underpost-card&quot;)" href="https://aws.amazon.com/cn/free/machine-learning/?trk=ba_a134p000006vc7nAAA&amp;trkCampaign=ML&amp;sc_channel=ba&amp;sc_campaign=cnblogs&amp;sc_outcome=Acquisition&amp;sc_geo=CHNA&amp;sc_country=CN&amp;sc_publisher=Others" target="_blank">AWS上的免费机器学习</a></div></div>
+    <div id="cnblogs_c2" class="under-post-card">
+        <div id="div-gpt-ad-1592366332455-0" style="width: 468px; height: 60px;" data-google-query-id="CPGm7s-6k-8CFZAvAQods5sHzQ"><div id="google_ads_iframe_/1090369/C2_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C2_0" title="3rd party ad content" name="google_ads_iframe_/1090369/C2_0" width="468" height="60" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" data-google-container-id="2" style="border: 0px; vertical-align: bottom;" data-load-complete="true" src="./Buffer types_files/saved_resource(1).html"></iframe></div></div>
+    </div>
+    <div id="under_post_card2"><div class="itnews under-post-card">
+    <b>最新新闻</b>：
+    <br>
+ ·          <a href="https://news.cnblogs.com/n/689376/" target="_blank">延迟满足感：研究发现具有快速学习能力的墨鱼能通过 "棉花糖测试"</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/689375/" target="_blank">微软推出Azure Percept新平台，让边缘设备部署AI更轻松</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/689374/" target="_blank">高德打车联合60余家网约车平台成立“免佣联盟”</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/689373/" target="_blank">科学家在北极高层大气中发现太空飓风</a>
+        <br>
+ ·          <a href="https://news.cnblogs.com/n/689372/" target="_blank">波音的“忠诚僚机”战斗无人机在澳大利亚完成首次飞行</a>
+        <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="under-post-card"></div>
+    <script type="text/javascript">
+       var commentManager = new blogCommentManager();
+       commentManager.renderComments(0);
+       fixPostBody();
+       deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);       deliverT2();
+       deliverC1C2();
+       loadNewsAndKb();
+       loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);       LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+       GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+       loadOptUnderPost();
+       GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+
+</div>
+
+
+</div>
+<div id="leftcontent">
+	
+		<div id="leftcontentcontainer">
+			<div id="sidebar_news" class="newsItem"><!--done-->
+<div class="newsItem">
+	
+<div id="blog-news">
+    
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/duanxz/">
+            duanxz
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/duanxz/" title="入园时间：2011-03-25">
+            9年11个月
+        </a>
+        <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/duanxz/followers/">
+            1944
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/duanxz/followees/">
+            19
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow(&#39;380416fe-3256-e011-a53f-842b2b196315&#39;)">+加关注</a></div>
+        <script>getFollowStatus('380416fe-3256-e011-a53f-842b2b196315');</script>
+    </div>
+</div>
+</div>
+
+</div>
+<div id="sidebar_c3"></div>
+			<div id="calendar"><div id="blog-calendar" style="">
+
+<table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0">
+    <tbody>
+        <tr>
+            <td colspan="7">
+                <table class="CalTitle" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2021/02/03&#39;); return false;">&lt;</a>
+                            </td>
+                            <td align="center">2021年3月</td>
+                            <td align="right" class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2021/04/03&#39;); return false;">&gt;</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    <tr>
+        <th class="CalDayHeader" align="center" abbr="日" scope="col">日</th>
+        <th class="CalDayHeader" align="center" abbr="一" scope="col">一</th>
+        <th class="CalDayHeader" align="center" abbr="二" scope="col">二</th>
+        <th class="CalDayHeader" align="center" abbr="三" scope="col">三</th>
+        <th class="CalDayHeader" align="center" abbr="四" scope="col">四</th>
+        <th class="CalDayHeader" align="center" abbr="五" scope="col">五</th>
+        <th class="CalDayHeader" align="center" abbr="六" scope="col">六</th>
+    </tr>
+            <tr>
+                            <td class="CalOtherMonthDay" align="center">28</td>
+                        <td class="" align="center">
+                            1
+                        </td>
+                        <td class="" align="center">
+                            2
+                        </td>
+                        <td class="CalTodayDay" align="center">
+                            3
+                        </td>
+                        <td class="" align="center">
+                            4
+                        </td>
+                        <td class="" align="center">
+                            5
+                        </td>
+                    <td class="CalWeekendDay" align="center">
+                        6
+                    </td>
+            </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            7
+                        </td>
+                            <td class="" align="center">
+                                8
+                            </td>
+                            <td class="" align="center">
+                                9
+                            </td>
+                            <td class="" align="center">
+                                10
+                            </td>
+                            <td class="" align="center">
+                                11
+                            </td>
+                            <td class="" align="center">
+                                12
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            13
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            14
+                        </td>
+                            <td class="" align="center">
+                                15
+                            </td>
+                            <td class="" align="center">
+                                16
+                            </td>
+                            <td class="" align="center">
+                                17
+                            </td>
+                            <td class="" align="center">
+                                18
+                            </td>
+                            <td class="" align="center">
+                                19
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            20
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            21
+                        </td>
+                            <td class="" align="center">
+                                22
+                            </td>
+                            <td class="" align="center">
+                                23
+                            </td>
+                            <td class="" align="center">
+                                24
+                            </td>
+                            <td class="" align="center">
+                                25
+                            </td>
+                            <td class="" align="center">
+                                26
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            27
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            28
+                        </td>
+                            <td class="" align="center">
+                                29
+                            </td>
+                            <td class="" align="center">
+                                30
+                            </td>
+                            <td class="" align="center">
+                                31
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                1
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                2
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            3
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalOtherMonthDay" align="center">
+                            4
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                5
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                6
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                7
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                8
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                9
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            10
+                        </td>
+                </tr>
+    </tbody>
+</table></div></div>                
+                    <script>loadBlogDefaultCalendar();</script><br>
+			<div id="blog-sidecolumn"><!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            <div id="widget_my_google" class="div_my_zzk">
+                <input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+<div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">
+常用链接
+</h3>
+<ul>
+    
+<li><a href="https://www.cnblogs.com/duanxz/p/" title="我的博客的随笔列表">我的随笔</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/MyComments.html" title="我的发表过的评论列表">我的评论</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/RecentComments.html" title="我的博客的评论列表">最新评论</a></li>
+<li><a href="https://www.cnblogs.com/duanxz/tag/" title="我的博客的标签列表">我的标签</a></li>
+
+</ul>
+</div>
+
+<!-- 最新随笔 -->
+
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block">
+<h3>我的标签</h3>
+<div id="MyTag">
+    <ul>
+                <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/mysql/">mysql<span class="tag-count">(121)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/spring/">spring<span class="tag-count">(102)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/linux%E5%91%BD%E4%BB%A4/">linux命令<span class="tag-count">(83)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/monitor/">monitor<span class="tag-count">(76)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/springcloud/">springcloud<span class="tag-count">(74)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/juc/">juc<span class="tag-count">(58)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程<span class="tag-count">(58)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/cache/">cache<span class="tag-count">(56)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/distributed/">distributed<span class="tag-count">(55)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/duanxz/tag/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/">JVM虚拟机<span class="tag-count">(53)</span></a>
+        </li>
+    <li>
+        <a href="https://www.cnblogs.com/duanxz/tag/">更多</a>
+    </li>
+
+    </ul>
+</div>
+</div>
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+
+    <h3 class="catListTitle">
+        
+随笔分类
+
+
+
+    </h3>
+    <ul class="catList">
+            <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/553816.html" rel="" target="">
+     high-concurrence(6)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/586230.html" rel="" target="">
+    alibaba(23)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/411002.html" rel="" target="">
+    Android(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/548212.html" rel="" target="">
+    annotation(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/418953.html" rel="" target="">
+    Application Server(34)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/422786.html" rel="" target="">
+    app-server管理与优化(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/428481.html" rel="" target="">
+    Architecture(38)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/904378.html" rel="" target="">
+    axis2(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/585830.html" rel="" target="">
+    build(11)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/539559.html" rel="" target="">
+    cache(58)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/978943.html" rel="" target="">
+    cache-memcache(20)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/394740.html" rel="" target="">
+    cache-redis(10)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1335026.html" rel="" target="">
+    configserver(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/562262.html" rel="" target="">
+    configuration-center(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1127449.html" rel="" target="">
+    consistency(20)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/568651.html" rel="" target="">
+    CXF(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/430438.html" rel="" target="">
+    db操作(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/565418.html" rel="" target="">
+    DB基础(15)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/419580.html" rel="" target="">
+    design discipline(8)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1334959.html" rel="" target="">
+    DevOps(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/587085.html" rel="" target="">
+    distributed(72)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/445223.html" rel="" target="">
+    doc(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1346307.html" rel="" target="">
+    docker(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/424347.html" rel="" target="">
+    dubbo(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/418564.html" rel="" target="">
+    eclipse(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/533322.html" rel="" target="">
+    effective java笔记(8)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/730429.html" rel="" target="">
+    Ehcache(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/426762.html" rel="" target="">
+    environment(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/700824.html" rel="" target="">
+    ETL(14)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/404604.html" rel="" target="">
+    flume(11)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/779357.html" rel="" target="">
+    ftp(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1317428.html" rel="" target="">
+    gateway(25)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1168641.html" rel="" target="">
+    gc(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1683157.html" rel="" target="">
+    go(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/691548.html" rel="" target="">
+    hadoop(22)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/389786.html" rel="" target="">
+    HSQLDB(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/563920.html" rel="" target="">
+    http(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/383841.html" rel="" target="">
+    interceptor-filter-servlet(16)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/538542.html" rel="" target="">
+    io(14)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/427319.html" rel="" target="">
+    IT(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/488857.html" rel="" target="">
+    J2EE(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/566190.html" rel="" target="">
+    J2EE核心模式(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/389226.html" rel="" target="">
+    java(41)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/561862.html" rel="" target="">
+    java8(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/434044.html" rel="" target="">
+    java-advanced(23)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/687976.html" rel="" target="">
+    java-annotation(15)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/763020.html" rel="" target="">
+    java-basis(15)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/763713.html" rel="" target="">
+    java-collection(45)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/763365.html" rel="" target="">
+    java-enum&amp;generic(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/406694.html" rel="" target="">
+    java-exception(10)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/390800.html" rel="" target="">
+    javascript(12)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/439877.html" rel="" target="">
+    java加密与安全(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/764012.html" rel="" target="">
+    java理论知识(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/421781.html" rel="" target="">
+    java优化(15)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/744910.html" rel="" target="">
+    jdk命令(22)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/490144.html" rel="" target="">
+    Jetty(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/396276.html" rel="" target="">
+    JMS(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/689081.html" rel="" target="">
+    JMX(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/546322.html" rel="" target="">
+    JNI(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/493797.html" rel="" target="">
+    jquery(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/410572.html" rel="" target="">
+    js+css(6)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/407624.html" rel="" target="">
+    JSON(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/434096.html" rel="" target="">
+    juc(55)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/405075.html" rel="" target="">
+    junit(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/422712.html" rel="" target="">
+    jvm-monitor(46)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/574744.html" rel="" target="">
+    JVM虚拟机(55)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/706389.html" rel="" target="">
+    kafka(14)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/425058.html" rel="" target="">
+    linux(59)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/435126.html" rel="" target="">
+    linux tool(11)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/1028193.html" rel="" target="">
+    linux编程(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/764445.html" rel="" target="">
+    linux命令(80)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/765902.html" rel="" target="">
+    linux文件和目录管理(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/765446.html" rel="" target="">
+    linux系统配置(11)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/426521.html" rel="" target="">
+    linux性能分析(28)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/434841.html" rel="" target="">
+    load-balance(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/424348.html" rel="" target="">
+    lock(35)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/779584.html" rel="" target="">
+    log(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/433547.html" rel="" target="">
+    log4j(7)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/782705.html" rel="" target="">
+    message-queue(31)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/810816.html" rel="" target="">
+    middleware(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/562031.html" rel="" target="">
+    MongoDB(34)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/583357.html" rel="" target="">
+    monitor(72)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/582548.html" rel="" target="">
+    mybatis(38)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/383842.html" rel="" target="">
+    mysql(117)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901168.html" rel="" target="">
+    mysql触发器(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901167.html" rel="" target="">
+    mysql存储过程函数事件(6)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901170.html" rel="" target="">
+    mysql分区(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/775158.html" rel="" target="">
+    mysql关键字(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/720478.html" rel="" target="">
+    mysql函数(12)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901157.html" rel="" target="">
+    mysql环境与运维(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/900470.html" rel="" target="">
+    mysql基础(8)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901172.html" rel="" target="">
+    mysql架构(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901693.html" rel="" target="">
+    mysql配置及管理(8)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901171.html" rel="" target="">
+    mysql日志(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901166.html" rel="" target="">
+    mysql事物和锁(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901164.html" rel="" target="">
+    mysql索引(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/901177.html" rel="" target="">
+    mysql优化(35)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/539474.html" rel="" target="">
+    netty(18)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/611538.html" rel="" target="">
+    nginx(34)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/category/725883.html" rel="" target="">
+    NoSQL(40)
+</a>
+
+
+            </li>                <li class="catListItem"><a href="javascript:void(0)" onclick="sideColumnManager.loadMore(this)">更多</a></li>
+    </ul>
+    <h3 class="catListTitle">
+        
+随笔档案
+
+
+
+    </h3>
+    <ul class="catList">
+            <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2021/01.html" rel="" target="">
+    2021年1月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2020/12.html" rel="" target="">
+    2020年12月(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2020/10.html" rel="" target="">
+    2020年10月(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2020/09.html" rel="" target="">
+    2020年9月(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2020/07.html" rel="" target="">
+    2020年7月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2020/04.html" rel="" target="">
+    2020年4月(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2020/03.html" rel="" target="">
+    2020年3月(12)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/12.html" rel="" target="">
+    2019年12月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/11.html" rel="" target="">
+    2019年11月(23)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/10.html" rel="" target="">
+    2019年10月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/08.html" rel="" target="">
+    2019年8月(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/07.html" rel="" target="">
+    2019年7月(8)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/06.html" rel="" target="">
+    2019年6月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/05.html" rel="" target="">
+    2019年5月(3)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/04.html" rel="" target="">
+    2019年4月(6)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/03.html" rel="" target="">
+    2019年3月(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/02.html" rel="" target="">
+    2019年2月(20)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2019/01.html" rel="" target="">
+    2019年1月(11)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/12.html" rel="" target="">
+    2018年12月(12)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/11.html" rel="" target="">
+    2018年11月(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/10.html" rel="" target="">
+    2018年10月(8)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/09.html" rel="" target="">
+    2018年9月(18)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/08.html" rel="" target="">
+    2018年8月(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/07.html" rel="" target="">
+    2018年7月(11)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/06.html" rel="" target="">
+    2018年6月(24)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/05.html" rel="" target="">
+    2018年5月(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/03.html" rel="" target="">
+    2018年3月(7)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2018/02.html" rel="" target="">
+    2018年2月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/12.html" rel="" target="">
+    2017年12月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/11.html" rel="" target="">
+    2017年11月(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/09.html" rel="" target="">
+    2017年9月(29)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/08.html" rel="" target="">
+    2017年8月(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/06.html" rel="" target="">
+    2017年6月(7)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/05.html" rel="" target="">
+    2017年5月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/04.html" rel="" target="">
+    2017年4月(29)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/03.html" rel="" target="">
+    2017年3月(15)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/02.html" rel="" target="">
+    2017年2月(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2017/01.html" rel="" target="">
+    2017年1月(21)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/12.html" rel="" target="">
+    2016年12月(7)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/11.html" rel="" target="">
+    2016年11月(60)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/10.html" rel="" target="">
+    2016年10月(10)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/09.html" rel="" target="">
+    2016年9月(1)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/08.html" rel="" target="">
+    2016年8月(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/06.html" rel="" target="">
+    2016年6月(6)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/05.html" rel="" target="">
+    2016年5月(25)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/04.html" rel="" target="">
+    2016年4月(53)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/03.html" rel="" target="">
+    2016年3月(37)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/02.html" rel="" target="">
+    2016年2月(39)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2016/01.html" rel="" target="">
+    2016年1月(141)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/12.html" rel="" target="">
+    2015年12月(98)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/11.html" rel="" target="">
+    2015年11月(35)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/10.html" rel="" target="">
+    2015年10月(73)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/09.html" rel="" target="">
+    2015年9月(12)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/08.html" rel="" target="">
+    2015年8月(107)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/07.html" rel="" target="">
+    2015年7月(28)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/06.html" rel="" target="">
+    2015年6月(7)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/05.html" rel="" target="">
+    2015年5月(75)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/04.html" rel="" target="">
+    2015年4月(51)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/03.html" rel="" target="">
+    2015年3月(32)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/02.html" rel="" target="">
+    2015年2月(12)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2015/01.html" rel="" target="">
+    2015年1月(10)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/12.html" rel="" target="">
+    2014年12月(4)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/11.html" rel="" target="">
+    2014年11月(19)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/10.html" rel="" target="">
+    2014年10月(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/09.html" rel="" target="">
+    2014年9月(25)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/08.html" rel="" target="">
+    2014年8月(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/06.html" rel="" target="">
+    2014年6月(59)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/05.html" rel="" target="">
+    2014年5月(36)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/04.html" rel="" target="">
+    2014年4月(21)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/03.html" rel="" target="">
+    2014年3月(54)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/02.html" rel="" target="">
+    2014年2月(49)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2014/01.html" rel="" target="">
+    2014年1月(48)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/12.html" rel="" target="">
+    2013年12月(57)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/11.html" rel="" target="">
+    2013年11月(26)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/10.html" rel="" target="">
+    2013年10月(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/09.html" rel="" target="">
+    2013年9月(5)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/08.html" rel="" target="">
+    2013年8月(6)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/07.html" rel="" target="">
+    2013年7月(19)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/06.html" rel="" target="">
+    2013年6月(32)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/05.html" rel="" target="">
+    2013年5月(15)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/04.html" rel="" target="">
+    2013年4月(9)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/03.html" rel="" target="">
+    2013年3月(13)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/02.html" rel="" target="">
+    2013年2月(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2013/01.html" rel="" target="">
+    2013年1月(35)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/12.html" rel="" target="">
+    2012年12月(39)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/11.html" rel="" target="">
+    2012年11月(45)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/10.html" rel="" target="">
+    2012年10月(55)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/09.html" rel="" target="">
+    2012年9月(17)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/08.html" rel="" target="">
+    2012年8月(45)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/07.html" rel="" target="">
+    2012年7月(29)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/06.html" rel="" target="">
+    2012年6月(19)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="false" style="display: none">
+                
+<a href="https://www.cnblogs.com/duanxz/archive/2012/05.html" rel="" target="">
+    2012年5月(9)
+</a>
+
+
+            </li>                <li class="catListItem"><a href="javascript:void(0)" onclick="sideColumnManager.loadMore(this)">更多</a></li>
+    </ul>
+    <h3 class="catListTitle">
+        
+文章分类
+
+
+
+    </h3>
+    <ul class="catList">
+            <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/383843.html" rel="" target="">
+    cloud(2)
+</a>
+
+
+            </li>                    <li class="catListItem" data-category-list-item-visible="true" style="display: block">
+                
+<a href="https://www.cnblogs.com/duanxz/category/383844.html" rel="" target="">
+    mysql(1)
+</a>
+
+
+            </li>                
+    </ul>
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap" class="RecentComment">
+    <h3 class="catListTitle">最新评论</h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/9909073.html">1. Re:Apollo分布式配置中心部署以及使用</a></li>
+                    <li class="recent_comment_body"><p>部署图是用什么软件画的，挺好看的</p>
+</li>
+                    <li class="recent_comment_author">--huaweiman</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5038471.html">2. Re:Thread之三：Thread Join()的用法</a></li>
+                    <li class="recent_comment_body">@古代超人 wait会释放锁？当然会释放锁，代码见真招！！！...</li>
+                    <li class="recent_comment_author">--花生鼠的日常</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5038471.html">3. Re:Thread之三：Thread Join()的用法</a></li>
+                    <li class="recent_comment_body">@古代超人 wait会释放锁。当前线程持有共享资源，如果让当前线程进行等待，很简单这个共享资源按理就可以被其它线程进行调用（共享资源空闲出来了），而锁就相当于线程只能指定的线程调用。这不是很浅显的道理...</li>
+                    <li class="recent_comment_author">--花生鼠的日常</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5210189.html">4. Re:Maven详解之仓库------本地仓库、远程仓库</a></li>
+                    <li class="recent_comment_body"><ul>
+<li>很详细,多谢博主</li>
+</ul>
+</li>
+                    <li class="recent_comment_author">--离九</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/7493276.html">5. Re:spring4.0之二：@Configuration的使用</a></li>
+                    <li class="recent_comment_body"><p>超级棒，浅显易懂</p>
+</li>
+                    <li class="recent_comment_author">--咸鱼不臭</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/4522613.html">6. Re:HBase之四--(3)：hbasehbase分页查询</a></li>
+                    <li class="recent_comment_body"><p>大神，源码提示不存在，还有别的获取方式吗</p>
+</li>
+                    <li class="recent_comment_author">--勤劳的人儿最美丽</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5210189.html">7. Re:Maven详解之仓库------本地仓库、远程仓库</a></li>
+                    <li class="recent_comment_body"><p>写的真的和详细了，希望可以和大佬一样强</p>
+</li>
+                    <li class="recent_comment_author">--Lngstart</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5020398.html">8. Re:RocketMQ之六：RocketMQ消息存储</a></li>
+                    <li class="recent_comment_body"><p>非常不错</p>
+</li>
+                    <li class="recent_comment_author">--qad216</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/4919137.html">9. Re:nginx限制请求之四：目录进行IP限制</a></li>
+                    <li class="recent_comment_body"><p>多个ip地址怎么办呢？</p>
+</li>
+                    <li class="recent_comment_author">--韦驮天</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/archive/2012/12/24/2831077.html">10. Re:【转】5个常用Java 代码混淆器 助你保护你的代码</a></li>
+                    <li class="recent_comment_body"><p>有界面,字节码级别,完全离线的 java混淆工具</p>
+</li>
+                    <li class="recent_comment_author">--小盛技术</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5038471.html">11. Re:Thread之三：Thread Join()的用法</a></li>
+                    <li class="recent_comment_body">@h3110n3w0r1d 不是阻塞状态是waiting状态...</li>
+                    <li class="recent_comment_author">--ccccccccccccd</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5038471.html">12. Re:Thread之三：Thread Join()的用法</a></li>
+                    <li class="recent_comment_body">Object.wait()，Object就是那把锁，如果不释放锁别的线程拿不到这个对象，就调用不了Object.notify()和notifyAll()方法，等待的线程等一辈子也不能往下执行了，你说释...</li>
+                    <li class="recent_comment_author">--ccccccccccccd</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5038471.html">13. Re:Thread之三：Thread Join()的用法</a></li>
+                    <li class="recent_comment_body"><p>印象中wait方法确实会释放锁</p>
+</li>
+                    <li class="recent_comment_author">--9527_lhcb_wcx</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/3520829.html">14. Re:Metaspace 之一：Metaspace整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）</a></li>
+                    <li class="recent_comment_body"><p>看了好长时间才看懂</p>
+</li>
+                    <li class="recent_comment_author">--望舒~</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/7493276.html">15. Re:spring4.0之二：@Configuration的使用</a></li>
+                    <li class="recent_comment_body"><p>写的很细，支持一下</p>
+</li>
+                    <li class="recent_comment_author">--爱吃芒果的二哈</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5041116.html">16. Re:Spring单例Bean和线程安全</a></li>
+                    <li class="recent_comment_body"><p>内容不错，就是读起来有点吃力，排版文字顺序有点乱。</p>
+</li>
+                    <li class="recent_comment_author">--路远且行</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/5020398.html">17. Re:RocketMQ之六：RocketMQ消息存储</a></li>
+                    <li class="recent_comment_body"><p>作者有rocketmq其他方面的文章吗，想学习学习</p>
+</li>
+                    <li class="recent_comment_author">--IT新手村</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/archive/2013/01/15/2861349.html">18. Re:Log4j2的性能为什么这么好？</a></li>
+                    <li class="recent_comment_body"><p>我想问一下，异步日志最大支持多大的写入量呢？我这里20并发，80M/S的写入量最大了。还有这个大日志量的IO，它的限制瓶颈是什么呢？</p>
+</li>
+                    <li class="recent_comment_author">--星光01</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/8533174.html">19. Re:Java性能调优：利用JMC分析性能</a></li>
+                    <li class="recent_comment_body">java性能调优详细资料分享1160405674可以来裙里免费领取哦，包括但不限于（分布式架构、高可扩展、高性能、高并 发、Jvm性能调优、Spring，MyBatis，Nginx源码分析，Redis...</li>
+                    <li class="recent_comment_author">--图灵学院在线</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/6092997.html">20. Re:Java 应用性能调优实践</a></li>
+                    <li class="recent_comment_body"><p>更多Java性能调优实践课前往1160405674裙，资料无偿分享</p>
+</li>
+                    <li class="recent_comment_author">--图灵学院在线</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/4967042.html">21. Re:java对象在内存中的结构（HotSpot虚拟机）</a></li>
+                    <li class="recent_comment_body"><p>Klass 中的 _java_mirror 才是 Class 的实例</p>
+</li>
+                    <li class="recent_comment_author">--N3verL4nd</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/3520829.html">22. Re:Metaspace 之一：Metaspace整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）</a></li>
+                    <li class="recent_comment_body">@秋夜无霜 有良心的CSDN转载。太多CSDN转载，出处都不写，真是吃人不吐骨头的感觉。...</li>
+                    <li class="recent_comment_author">--Terry蒋</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/3623367.html">23. Re:JMeter使用jar进行压力测试</a></li>
+                    <li class="recent_comment_body">亲，第4步我看lib目录下并没有可用的jar包，是导入lib/ext下的jar包吧：ApacheJMeter_xxx.jar 4）新建Java工程，在该工程中，引入JMeter目录下lib中的jar包...</li>
+                    <li class="recent_comment_author">--一叶扁舟顷万涛</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/11907855.html">24. Re:Skywalking总结</a></li>
+                    <li class="recent_comment_body"><p>不错，言简意赅。</p>
+</li>
+                    <li class="recent_comment_author">--JeffSheng</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/duanxz/p/11797929.html">25. Re:运维开发实践——基于Sentry搭建错误日志监控系统</a></li>
+                    <li class="recent_comment_body">@rich23 当然可以...</li>
+                    <li class="recent_comment_author">--大碗油泼</li>
+        </ul>
+    </div>
+</div></div>
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+<div id="topview_posts_wrap">
+    <h3 class="catListTitle">阅读排行榜</h3>
+    <div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/7493276.html">
+                            1. spring4.0之二：@Configuration的使用(331024)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/3511695.html">
+                            2. java类中serialversionuid 作用 是什么?举个例子说明(111726)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/4520627.html">
+                            3. springboot中使用@Value读取配置文件(106581)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/6528161.html">
+                            4. ES之五：ElasticSearch聚合(99802)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/archive/2012/08/24/2654361.html">
+                            5. JSONArray数据转换成java List(95381)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+    <h3 class="catListTitle">评论排行榜</h3>
+    <div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/7493276.html">
+                            1. spring4.0之二：@Configuration的使用(23)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/archive/2012/06/13/2547801.html">
+                            2. UML类图符号 各种关系说明以及举例(11)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/5038471.html">
+                            3. Thread之三：Thread Join()的用法(9)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/9204367.html">
+                            4. 美的支付-对账系统实现(6)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/duanxz/p/3520829.html">
+                            5. Metaspace 之一：Metaspace整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）(6)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/duanxz/p/7493276.html">
+                                1. spring4.0之二：@Configuration的使用(59)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/duanxz/archive/2012/06/13/2547801.html">
+                                2. UML类图符号 各种关系说明以及举例(24)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/duanxz/p/3511695.html">
+                                3. java类中serialversionuid 作用 是什么?举个例子说明(22)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/duanxz/p/5229352.html">
+                                4. CAP原则(CAP定理)、BASE理论(17)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/duanxz/p/7552857.html">
+                                5. 服务链路追踪(Spring Cloud Sleuth)(12)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div></div></div>
+                    <script>loadBlogSideColumn();</script></div>
+	
+</div>
+<!--done-->
+<div class="footer">
+	Powered by: <a href="http://www.cnblogs.com/">博客园</a>
+	Copyright © 2021 duanxz
+<br><span id="poweredby">Powered by .NET 5.0 on Kubernetes</span>
+
+</div>
+
+
+
+
+
+
+    
+
+    <input type="hidden" id="antiforgery_token" value="CfDJ8EklyHYHyB5Oj4onWtxTnxZL26VuEvkWCV1ZwYF1xXROHSLteofFLLYaG6o5F5zXKLlQxrMaEMNx3Goapl8u1ui7HGovnKd6IB02oeCyFwI2SFXlJc5j4WZbcneOiq_lKCwklYcqiH3VLMoMk7nz6hU">
+
+
+<iframe id="google_osd_static_frame_9948784453227" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./Buffer types_files/saved_resource(2).html"></iframe></body></html>
