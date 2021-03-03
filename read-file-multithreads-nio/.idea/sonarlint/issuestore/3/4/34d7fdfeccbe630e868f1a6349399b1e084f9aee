@@ -1,0 +1,25 @@
+
+P
+java:S1143*"5Remove this return statement from this finally block.(ƒ´î˜ÿÿÿÿÿ
+i
+java:S2095""LUse try-with-resources or close this "BufferedReader" in a "finally" clause.(ç÷ƒ8åÏ¾½ı.
+S	java:S106("9Replace this use of System.out or System.err by a logger.(¿¼í›ıÿÿÿÿ
+E
+java:S2093"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ
+U
+java:S1118
+":Add a private constructor to hide the implicit public one.(²ËŞ¦üÿÿÿÿ
+E
+java:S2093!"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ
+P
+java:S1143"5Remove this return statement from this finally block.(ƒ´î˜ÿÿÿÿÿ
+N	java:S1068"9Replace this use of System.out or System.err by a logger.(ÎôÜ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(ëëÜÈ
+P
+java:S1143:"5Remove this return statement from this finally block.(ƒ´î˜ÿÿÿÿÿ
+E
+java:S20932"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ
+`
+java:S20953"EUse try-with-resources or close this "Scanner" in a "finally" clause.(Ö¾éûÿÿÿÿ
+c
+java:S2095"HUse try-with-resources or close this "FileReader" in a "finally" clause.(ĞÑ¹Úıÿÿÿÿ
