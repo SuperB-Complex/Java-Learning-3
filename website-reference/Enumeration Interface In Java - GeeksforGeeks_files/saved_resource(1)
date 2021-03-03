@@ -1,0 +1,48 @@
+
+var ftGUID_5266903="47800195BBEFD1";
+var ftConfID_5266903="23899731";
+var ftParams_5266903="ft_custom=45106207&ftOBA=1&ft_domain=www.geeksforgeeks.org&ft_ifb=1&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fwww.geeksforgeeks.org%2F&us_privacy=${US_PRIVACY}&cachebuster=245112.43844530717&ft_section=AD1EzRQAAABmCl4KDAgAFQAAAAAdAAAAABIMCAAVAAAAAB0AAAAAIhEIn4jBFagC4vDeArACyvyeCEAB0gIqGAEiEwjb4baW65TvAhVCR9UKHYZ4DTwoATABOObD79OQDUACSAFYmYEgENX89JkBMoyJw_CDNIym4xGSXLYbQw&ft_keyword=%26ft_keyword%3D45106207";
+var ftKeyword_5266903="45106207";
+var ftCustom_5266903="45106207";
+var ftSection_5266903="AD1EzRQAAABmCl4KDAgAFQAAAAAdAAAAABIMCAAVAAAAAB0AAAAAIhEIn4jBFagC4vDeArACyvyeCEAB0gIqGAEiEwjb4baW65TvAhVCR9UKHYZ4DTwoATABOObD79OQDUACSAFYmYEgENX89JkBMoyJw_CDNIym4xGSXLYbQw";
+var ftSegment_5266903="afww,w2c,aanx,afxp,aevh,afti,af42,aehy";
+var ftSegmentList_5266903=[{s:'afww'},{s:'w2c'},{s:'aanx',t:47890000},{s:'afxp'},{s:'aevh'},{s:'afti'},{s:'af42'},{s:'aehy'}];
+var ftRuleMatch_5266903="00010000";
+var ftTimestamp_5266903="1614799042";
+var ftGeoC2_5266903="us";
+var ftGeoState_5266903="il";
+var ftGeoCity_5266903="chicago";
+var ftISP_5266903="att internet services";
+var ftSpeed_5266903="xdsl";
+var ftDMA_5266903="602";
+var ftLong_5266903="-87.64";
+var ftLat_5266903="41.88";
+var ftPostal_5266903="60661";
+var ftTimeZone_5266903="-600";
+var ftMobileCarrier_5266903="";
+var ftImp5266903 = {};
+ftImp5266903.privacy = "x";
+ftImp5266903.guidAge = "30";
+ftImp5266903.impID = "E0E1FE5E-C5B4-27A2-8960-C015BCA92F49";
+ftImp5266903.duid = "FT:47800195BBEFD1";
+
+ftImp5266903.ft_tpplid = "";
+ftImp5266903.ft_c = {};
+ftImp5266903.gdpr = "";
+ftImp5266903.gdpr_consent = "";
+ftImp5266903.gdpr_pd = "";
+ftImp5266903.oob_consent = "0";
+ftImp5266903.gdprStoredConsent = "";
+ftImp5266903.us_privacy = "!!US_PRIVACY!";
+
+ftImp5266903.jsAppend = "1";
+(function(){
+    var tag = document.getElementById('ft_servedby_5266903') || (function(s){
+    	return s[s.length-1];
+    }(document.getElementsByTagName('script'))),
+           js = document.createElement('script');
+    js.src = 
+"https://cdn.flashtalking.com/xre/526/5266903/3322443/js/j-5266903-3322443.js";
+    js.id = "ftscript_m5266903";
+    tag.parentNode.insertBefore(js, tag);
+}());

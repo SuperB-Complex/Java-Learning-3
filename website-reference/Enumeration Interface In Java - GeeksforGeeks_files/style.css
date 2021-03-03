@@ -1,0 +1,174 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+/* MUST UPDATE PER SIZE*/
+#main{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 298px;
+    height: 248px;
+    border: 1px solid #000;
+    overflow: hidden;
+    z-index: 1;
+    opacity: 0;
+    box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+#efCTA{position:absolute;top:0px;left:0px;
+    font-family: gotham-bold, sans-serif;
+    padding: 0px 23px;
+    border-radius: 12px;
+    left: 12px;
+    position: absolute;
+    overflow: hidden;
+    font-size: 9px;
+    left: 0px;
+    letter-spacing: .05em;
+    line-height: 22px;
+    -webkit-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+}
+#background_vid {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px;
+    height: 250px;
+}
+
+#bumper_vid {
+    position: absolute;
+    display: none;
+    top: 0px;
+    left: 0px;
+    width: 300px;
+    height: 250px;
+}
+/*END MUST UPDATE PER SIZE*/
+/*MAY UPDATE PER SIZE*/
+.itemPriceBig{fontsize:1.2em;font-family:gotham-bold, sans-serif;opacity:0;}
+.itemPriceSmall{font-size:.5em;text-decoration:line-through;font-family:gotham-book, sans-serif;opacity:0;}
+.itemName{font-size:.5em;font-family:gotham-book, sans-serif;opacity:0;}
+#EF_legal{font-size:.5em;font-family:gotham-book, sans-serif;}
+/*END MAY UPDATE PER SIZE */
+
+.hl,.eh .splitHead,.es .splitHead{font-family:gotham-bold, sans-serif;}
+.sh{font-family:gotham-book, sans-serif;}
+#carousel{position:absolute;top:0px;left:0px;}
+*{-webkit-font-smoothing: antialiased;}
+#clock{font:gotham-bold,sans-serif;font-family:gotham-bold,sans-serif;}
+@font-face {
+    font-family: "gotham-bold";
+    src: url("../fonts/Gotham-Bold.woff") format("woff");
+}
+
+@font-face {
+    font-family: "gotham-book";
+    src: url("../fonts/Gotham-Book.woff") format("woff");
+}
+
+svg {
+    -webkit-transition:
+    fill .5s ease-out;
+    -o-transition:
+    fill .5s ease-out;
+    -moz-transition:
+    fill .5s ease-out;
+    transition:
+    fill .5s ease-out;
+    -ms-transition:
+    fill .5s ease-out;
+}
+
+#bgImage {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#bgExit {
+    position: absolute;
+    display: block;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background-color: transparent
+}
+
+#bumperExit {
+    position: absolute;
+    display: none;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background-color: transparent
+}
+
+.shine {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    position: absolute;
+    height: 300%;
+    width: 30%;
+    z-index: 1;
+    left: 35%;
+    top: -100%;
+
+    -webkit-transition: transform 1s ease;
+    -o-transition: transform 1s ease;
+    transition: transform 1s ease;
+
+    -webkit-transform: translateX(-300%) translateY(-50%) rotate(45deg);
+    -ms-transform: translateX(-300%) translateY(-50%) rotate(45deg);
+    transform: translateX(-300%) translateY(-50%) rotate(45deg);
+}
+
+.shine.show {
+    -webkit-transform: translateX(300%) translateY(50%) rotate(45deg);
+    -ms-transform: translateX(300%) translateY(50%) rotate(45deg);
+    transform: translateX(300%) translateY(50%) rotate(45deg);
+}
+
+.hide {opacity: 0;}
+
+.show {opacity: 1;}
+
+#bumperImage{
+    display: none;
+    position: absolute;
+    opacity:0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.lenovored{         color:#E1140A}
+.lenovoorange{      color:#FF6A00}
+.lenovoyellow{      color:#FEE600}
+.lenovogreen{       color:#6AC346}
+.lenovocyan{        color:#46C8E1}
+.lenovoblue{        color:#3E8DDD}
+.lenovopink{        color:#F04187}
+.lenovopurple{      color:#8246AF}
+.lenovodarkgray{    color:#333F48}
+.lenovomediumgray{  color:#6F7170}
+.lenovolightgray{   color:#C4BEB6}
+.lenovoblack{       color:#000000}
+.gbk{font-family:gotham-book,sans-serif}.gbd{font-family:gotham-bold,sans-serif}
+#lenovoLogo{max-width:22px;}
