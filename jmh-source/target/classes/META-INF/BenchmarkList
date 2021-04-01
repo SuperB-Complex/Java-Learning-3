@@ -1,0 +1,4 @@
+JMH S 13 org.play.Loop S 43 org.play.generated.Loop_loopForEach_jmhTest S 11 loopForEach S 11 AverageTime E A 1 1 1 E E E E E E E I 1 2 E E L 2 6 -Xms2G 6 -Xmx2G E E M 1 1 N 1 2 10 U 12 MILLISECONDS E E 
+JMH S 13 org.play.Loop S 41 org.play.generated.Loop_loopWhile_jmhTest S 9 loopWhile S 11 AverageTime E A 1 1 1 E E E E E E E I 1 2 E E L 2 6 -Xms2G 6 -Xmx2G E E M 1 1 N 1 2 10 U 12 MILLISECONDS E E 
+JMH S 13 org.play.Loop S 44 org.play.generated.Loop_loopIterator_jmhTest S 12 loopIterator S 11 AverageTime E A 1 1 1 E E E E E E E I 1 2 E E L 2 6 -Xms2G 6 -Xmx2G E E M 1 1 N 1 2 10 U 12 MILLISECONDS E E 
+JMH S 13 org.play.Loop S 39 org.play.generated.Loop_loopFor_jmhTest S 7 loopFor S 11 AverageTime E A 1 1 1 E E E E E E E I 1 2 E E L 2 6 -Xms2G 6 -Xmx2G E E M 1 1 N 1 2 10 U 12 MILLISECONDS E E 
